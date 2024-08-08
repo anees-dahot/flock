@@ -34,6 +34,7 @@ class LoginScreen extends StatelessWidget {
                 }
                 return null;
               },
+              inputType: TextInputType.emailAddress,
             ),
             SizedBox(
               height: height * 0.03,
