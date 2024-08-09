@@ -97,13 +97,23 @@ class _PickProfileImageState extends State<PickProfileImage> {
                       child: Text(state.error.toString()),
                     );
                   } else if (state is SuccessState) {
-                    return ClipOval(
-                      child: Image.file(
-                        File(state.image!.path),
-                        fit: BoxFit.cover,
-                        width: width * 0.5,
-                        height: height * 0.27,
-                      ),
+                    return Column(
+                      children: [
+                           SizedBox(height: height * 0.07),
+                        ClipOval(
+                          child: Image.file(
+                            File(state.image!.path),
+                            fit: BoxFit.cover,
+                            width: width * 0.5,
+                            height: height * 0.27,
+                          ),
+                        ),
+                         SizedBox(height: height * 0.07),
+              CustomButton(
+                  width: width, height: height, onTap: () {
+                  print(state.image!.path);
+                  }, text: 'Next')
+                      ],
                     );
                   }
                   return Container(
@@ -116,9 +126,7 @@ class _PickProfileImageState extends State<PickProfileImage> {
                   );
                 },
               ),
-              SizedBox(height: height * 0.04),
-              CustomButton(
-                  width: width, height: height, onTap: () {}, text: 'Next')
+             
             ],
           ),
         ),
