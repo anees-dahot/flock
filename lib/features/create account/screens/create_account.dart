@@ -16,7 +16,22 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController userName = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController bio = TextEditingController();
+  DateTime? _selectedDate;
   final _formKey = GlobalKey<FormState>();
+    void _selectDate(BuildContext context) async {
+                                  DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime(2101),
+                                  );
+
+                                  if (pickedDate != null) {
+                                    setState(() {
+                                      _selectedDate = pickedDate;
+                                    });
+                                  }
+                                }
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -65,15 +80,28 @@ class _CreateAccountState extends State<CreateAccount> {
                     },
                     hintText: 'Bio'),
                 SizedBox(height: height * 0.02),
-                CustomTextField(
-                    controller: bio,
-                    validator: (value) {
-                      if (value!.isEmpty || value == '') {
-                        return 'Please enter your Bio';
-                      }
-                      return null;
-                    },
-                    hintText: 'Bio'),
+                Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 28.0),
+                    child: Container(
+                      width: width * 0.9,
+                      height: height * 0.08,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            width: 1,
+                            color: Theme.of(context).colorScheme.primary),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                              onPressed: () {
+                              _selectDate(context);
+                              },
+                              child: Text(
+                             _selectedDate != null ?  _selectedDate.toString() : 'Date of Birth',
+                                style: Theme.of(context).textTheme.bodyLarge,
+                              ))),
+                    )),
                 SizedBox(height: height * 0.02),
                 CustomTextField(
                     controller: phoneNumber,
@@ -91,7 +119,8 @@ class _CreateAccountState extends State<CreateAccount> {
                     height: height,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pushNamed(SuggestedFriends.routeName);
+                        Navigator.of(context)
+                            .pushNamed(SuggestedFriends.routeName);
                       }
                     },
                     text: 'Create Account')
