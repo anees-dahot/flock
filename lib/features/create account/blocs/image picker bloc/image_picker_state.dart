@@ -15,7 +15,7 @@ class LoadingState extends ImagePickerState {}
 class ErrorState extends ImagePickerState {
   final String error;
 
-  ErrorState({required this.error});
+ const ErrorState({required this.error});
 }
 
 class SuccessState extends ImagePickerState {

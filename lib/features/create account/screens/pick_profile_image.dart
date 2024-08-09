@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flock/core/widgets/custom_button.dart';
 import 'package:flock/features/create%20account/blocs/image%20picker%20bloc/image_picker_bloc.dart';
+import 'package:flock/features/create%20account/screens/create_account.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,7 +64,7 @@ class _PickProfileImageState extends State<PickProfileImage> {
                           color: Theme.of(context).colorScheme.background,
                         )),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Container(
@@ -84,7 +85,7 @@ class _PickProfileImageState extends State<PickProfileImage> {
                   ),
                 ],
               ),
-                SizedBox(height: height * 0.04),
+              SizedBox(height: height * 0.04),
               BlocBuilder(
                 bloc: _imagePickerBloc,
                 builder: (context, state) {
@@ -99,7 +100,7 @@ class _PickProfileImageState extends State<PickProfileImage> {
                   } else if (state is SuccessState) {
                     return Column(
                       children: [
-                           SizedBox(height: height * 0.07),
+                        SizedBox(height: height * 0.07),
                         ClipOval(
                           child: Image.file(
                             File(state.image!.path),
@@ -108,11 +109,14 @@ class _PickProfileImageState extends State<PickProfileImage> {
                             height: height * 0.27,
                           ),
                         ),
-                         SizedBox(height: height * 0.07),
-              CustomButton(
-                  width: width, height: height, onTap: () {
-                  print(state.image!.path);
-                  }, text: 'Next')
+                        SizedBox(height: height * 0.07),
+                        CustomButton(
+                            width: width,
+                            height: height,
+                            onTap: () {
+                              Navigator.of(context).pushNamed(CreateAccount.routeName, arguments: state.image!.path);
+                            },
+                            text: 'Next')
                       ],
                     );
                   }
@@ -126,7 +130,6 @@ class _PickProfileImageState extends State<PickProfileImage> {
                   );
                 },
               ),
-             
             ],
           ),
         ),

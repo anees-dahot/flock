@@ -1,4 +1,6 @@
+import 'package:flock/features/create%20account/screens/create_account.dart';
 import 'package:flock/features/create%20account/screens/pick_profile_image.dart';
+import 'package:flock/features/create%20account/screens/suggested_friends.dart';
 import 'package:flock/features/home/screens/hom_screen.dart';
 import 'package:flock/features/login/screens/login_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,14 @@ Route generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(builder: (_) => RegisterScreen());
     case PickProfileImage.routeName:
       return MaterialPageRoute(builder: (_) => PickProfileImage());
+    case SuggestedFriends.routeName:
+      return MaterialPageRoute(builder: (_) => SuggestedFriends());
+    case CreateAccount.routeName:
+      final String image = routeSettings.arguments.toString();
+      return MaterialPageRoute(
+          builder: (_) => CreateAccount(
+                image: image,
+              ));
     default:
       return MaterialPageRoute(
         builder: (context) {
