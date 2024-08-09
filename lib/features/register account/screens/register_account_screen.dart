@@ -1,13 +1,12 @@
+import 'package:flock/core/widgets/custom_button.dart';
 import 'package:flock/core/widgets/text_fields.dart';
-import 'package:flock/features/create%20account/screens/pick_profile_image.dart';
-import 'package:flock/features/register%20account/screens/register_account_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/widgets/custom_button.dart';
+import '../../login/screens/login_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  static const String routeName = 'login-screen';
-  const LoginScreen({super.key});
+class RegisterScreen extends StatelessWidget {
+  static const String routeName = 'register-screen';
+  const RegisterScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class LoginScreen extends StatelessWidget {
           children: [
             // New welcome text
             Text(
-              'Welcome Back!',
+              'Welcome Buddy!',
               style: Theme.of(context)
                   .textTheme
                   .headlineLarge
@@ -40,7 +39,7 @@ class LoginScreen extends StatelessWidget {
             ),
             SizedBox(height: height * 0.01), // Spacing
             Text(
-              'Please login to your account',
+              'Please register your new account',
               style: Theme.of(context).textTheme.bodySmall,
             ),
             SizedBox(height: height * 0.04), // Spacing before the form
@@ -79,27 +78,28 @@ class LoginScreen extends StatelessWidget {
               height: height,
               onTap: () {
                 if (_formKey.currentState!.validate()) {
-                  Navigator.of(context).pushNamed(PickProfileImage.routeName);
+                  print('logged in');
                 }
               },
-              text: 'Login',
+              text: 'Register',
             ),
+
             SizedBox(
               height: height * 0.01,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Don't have an account?"),
+                const Text("Already have an account?"),
                 InkWell(
                     onTap: () {
                       Navigator.pushNamedAndRemoveUntil(
-                          context, RegisterScreen.routeName, (route) => false);
+                          context, LoginScreen.routeName, (route) => false);
                     },
                     splashColor: Colors.transparent,
                     highlightColor: Colors.transparent,
                     child: Text(
-                      " Register here!",
+                      " Login here!",
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.primary),
                     )),

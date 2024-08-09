@@ -1,4 +1,5 @@
 import 'package:flock/core/theme/theme_cubit.dart';
+import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,7 +25,6 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<ThemeCubit>.value(value: themeCubit),
-       
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
@@ -33,7 +33,8 @@ class MyApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: themeMode,
-            home: HomeScreen(),
+            onGenerateRoute: generateRoute,
+            initialRoute: HomeScreen.routeName,
           );
         },
       ),
