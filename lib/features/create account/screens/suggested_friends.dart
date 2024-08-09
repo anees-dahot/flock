@@ -149,9 +149,15 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
         children: [
           SizedBox(height: height * 0.05),
           Text(
-            'Add atleast 5 friends!',
-            style: Theme.of(context).textTheme.headlineLarge,
+            'Suggested Friends',
+            style: Theme.of(context).textTheme.headlineMedium,
           ),
+          const SizedBox(height: 8),
+          Text(
+            'Add at least 5 friends to get started!',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(height: 16),
           SizedBox(height: height * 0.05),
           Expanded(
             child: ListView.builder(
@@ -159,14 +165,15 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
               itemBuilder: (context, index) {
                 var data = people[index];
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal:  8.0, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
                   child: Card(
                     child: Container(
-                      margin: EdgeInsets.symmetric(vertical:  20),
+                      margin: EdgeInsets.symmetric(vertical: 20),
                       width: width * 0.9,
                       height: height * 0.07,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(14)),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14)),
                       child: ListTile(
                         leading: Image.network(data['imageUrl']),
                         title: Text(data['name']),
