@@ -18,20 +18,21 @@ class _CreateAccountState extends State<CreateAccount> {
   TextEditingController bio = TextEditingController();
   DateTime? _selectedDate;
   final _formKey = GlobalKey<FormState>();
-    void _selectDate(BuildContext context) async {
-                                  DateTime? pickedDate = await showDatePicker(
-                                    context: context,
-                                    initialDate: DateTime.now(),
-                                    firstDate: DateTime(2000),
-                                    lastDate: DateTime(2101),
-                                  );
+  void _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
 
-                                  if (pickedDate != null) {
-                                    setState(() {
-                                      _selectedDate = pickedDate;
-                                    });
-                                  }
-                                }
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -95,10 +96,12 @@ class _CreateAccountState extends State<CreateAccount> {
                           alignment: Alignment.centerLeft,
                           child: TextButton(
                               onPressed: () {
-                              _selectDate(context);
+                                _selectDate(context);
                               },
                               child: Text(
-                             _selectedDate != null ?  _selectedDate.toString() : 'Date of Birth',
+                                _selectedDate != null
+                                    ? _selectedDate.toString()
+                                    : 'Date of Birth',
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ))),
                     )),
