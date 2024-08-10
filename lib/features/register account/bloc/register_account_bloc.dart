@@ -20,16 +20,16 @@ class RegisterAccountBloc
     emit(RegisterAccountLoadingState());
     try {
       final respose = await registerAccountRepository.registerAccount(
-          email: event.email, password: event.password);
+          event.email, event.password);
       if (respose['status'] == 200) {
         emit(RegisterAccountSuccessState(message: respose['message']));
       } else if (respose['status'] == 400) {
-        emit(RegisterAccountSuccessState(message: respose['message']));
-      } else {
-        emit(RegisterAccountSuccessState(message: respose['message']));
+        emit(RegisterAccountFailureState(error: respose['message']));
+      } else if (respose['status'] == 500) {
+        emit(RegisterAccountFailureState(error: respose['message']));
       }
     } catch (e) {
-      emit(RegisterAccountFailureState(message: e.toString()));
+      emit(RegisterAccountFailureState(error: e.toString()));
     }
   }
 }
