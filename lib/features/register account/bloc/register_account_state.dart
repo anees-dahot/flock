@@ -20,9 +20,9 @@ class RegisterAccountSuccessState extends RegisterAccountState {
 }
 
 class RegisterAccountFailureState extends RegisterAccountState {
-  final String message;
+  final String error;
 
-  const RegisterAccountFailureState({required this.message});
+  const RegisterAccountFailureState({required this.error});
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }
