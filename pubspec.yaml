@@ -40,7 +40,8 @@ dependencies:
   equatable: 
   shared_preferences: ^2.2.3
   image_picker: ^1.1.2
-  syncfusion_flutter_datepicker: 
+  syncfusion_flutter_datepicker: ^26.2.8 
+  another_flushbar: ^1.12.30
 
 dev_dependencies:
   flutter_test:
