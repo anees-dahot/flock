@@ -79,7 +79,8 @@ authRouter.post("/api/create-account", auth, async (req, res) => {
 
     user.save();
 
-    res.json(user);
+    res.status(200).json({user});
+    console.log(user);
   } catch (error) {
     res.status(400).send({ error: error.message });
     console.log(error.message);

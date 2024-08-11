@@ -15,7 +15,7 @@ class CreateAccountRepository {
       int phoneNumber,
       DateTime dateOfBirth) async {
     String? token = await Storage().getData('token') as String;
-    
+
     final response = await http.post(
       Uri.parse('$baseUrl/api/create-account'),
       headers: {
@@ -33,17 +33,8 @@ class CreateAccountRepository {
     );
 
     if (response.statusCode == 200) {
-      // var responseData = jsonDecode(response.body);
-      // UserModel userModel = UserModel(
-      //     id: responseData['_id'],
-      //     fullName: responseData['fullName'],
-      //     userName: responseData['userName'],
-      //     bio: responseData['Bio'],
-      //     profileImage: responseData['profileImage'],
-      //     phoneNumber: responseData['phoneNumber'],
-      //     dateOfBirth: DateTime.parse(responseData['dateOfBirth']),
-      //     email: responseData['email'],
-      //     password: responseData['password']);
+      // var responseData = jsonDecode(response.body)['user'];
+      // UserModel userModel = UserModel.fromJson(responseData);
       // Storage().saveUser(userModel);
       // var data = await Storage().getUser() as UserModel;
       // print(data);
