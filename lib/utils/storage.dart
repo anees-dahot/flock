@@ -13,14 +13,15 @@ class Storage {
     pref.setString('user', user.toJson());
   }
 
-  Future<void> getUser() async {
+  Future<UserModel?> getUser() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.getString('user');
+    String? userJson = pref.getString('user');
+    return userJson != null ? UserModel.fromJson(userJson) : null;
   }
 
-  Future<void> getData(String key) async {
+  Future<String?> getData(String key) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.getString(key);
+    return pref.getString(key);
   }
 
   Future<void> deleteData(String key) async {
