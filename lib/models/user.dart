@@ -4,29 +4,29 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
-  String id;
+  String? id;
   String fullName;
   String userName;
   String bio;
   String profileImage;
-  String email;
-  String password;
-  int phoneNumbder;
+  String? email;
+  String? password;
+  int phoneNumber;
   DateTime dateOfBirth;
-  List<String> followers;
-  List<String> following;
+  List<String>? followers;
+  List<String>? following;
   UserModel({
-    required this.id,
+    this.id,
     required this.fullName,
     required this.userName,
     required this.bio,
     required this.profileImage,
-    required this.email,
-    required this.password,
-    required this.phoneNumbder,
+    this.email,
+    this.password,
+    required this.phoneNumber,
     required this.dateOfBirth,
-    required this.followers,
-    required this.following,
+    this.followers,
+    this.following,
   });
 
   Map<String, dynamic> toMap() {
@@ -38,7 +38,7 @@ class UserModel extends Equatable {
       'profileImage': profileImage,
       'email': email,
       'password': password,
-      'phoneNumbder': phoneNumbder,
+      'phoneNumber': phoneNumber,
       'dateOfBirth': dateOfBirth.millisecondsSinceEpoch,
       'followers': followers,
       'following': following,
@@ -54,7 +54,7 @@ class UserModel extends Equatable {
       profileImage: map['profileImage'] as String,
       email: map['email'] as String,
       password: map['password'] as String,
-      phoneNumbder: map['phoneNumbder'] as int,
+      phoneNumber: map['phoneNumber'] as int,
       dateOfBirth:
           DateTime.fromMillisecondsSinceEpoch(map['dateOfBirth'] as int),
       followers: List<String>.from((map['followers'] as List<String>)),
@@ -69,16 +69,16 @@ class UserModel extends Equatable {
 
   @override
   List<Object> get props => [
-        id,
+        id!,
         fullName,
         userName,
         bio,
         profileImage,
-        email,
-        password,
-        phoneNumbder,
+        email!,
+        password!,
+        phoneNumber,
         dateOfBirth,
-        followers,
-        following,
+        followers!,
+        following!,
       ];
 }

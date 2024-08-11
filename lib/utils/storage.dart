@@ -10,11 +10,10 @@ class Storage {
 
   Future<void> saveUser(UserModel user) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setString(
-        'user', user.toJson()); 
+    pref.setString('user', user.toJson());
   }
 
-  Future<void> getUser(UserModel user) async {
+  Future<void> getUser() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.getString('user');
   }
