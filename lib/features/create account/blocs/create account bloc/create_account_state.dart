@@ -20,9 +20,9 @@ class CreateAccountSuccessState extends CreateAccountState {
 }
 
 class CreateAccountFailureState extends CreateAccountState {
-  final String message;
+  final String error;
 
-  const CreateAccountFailureState({required this.message});
+  const CreateAccountFailureState({required this.error});
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [error];
 }
