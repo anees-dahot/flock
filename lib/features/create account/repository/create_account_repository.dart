@@ -32,21 +32,24 @@ class CreateAccountRepository {
     );
 
     if (response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
       UserModel userModel = UserModel(
-          fullName: fullName,
-          userName: userName,
-          bio: bio,
-          profileImage: profileImage,
-          phoneNumber: phoneNumber,
-          dateOfBirth: dateOfBirth);
+          id: responseData['_id'],
+          fullName: responseData['fullName'],
+          userName: responseData['userName'],
+          bio: responseData['Bio'],
+          profileImage: responseData['profileImage'],
+          phoneNumber: responseData['phoneNumber'],
+          dateOfBirth: DateTime.parse(responseData['dateOfBirth']),
+          email: responseData['email'],
+          password: responseData['password']);
       Storage().saveUser(userModel);
       var data = await Storage().getUser() as UserModel;
       print(data);
       print(data.fullName);
-      Storage().saveDate('id', jsonDecode(response.body)['user']['_id']);
       return {
         'status': 200,
-        'message': 'Logged in successfuly',
+        'message': 'Created account successfuly',
       };
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': jsonDecode(response.body)['msg']};
