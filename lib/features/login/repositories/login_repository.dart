@@ -17,7 +17,7 @@ class LoginRepository {
 
     if (response.statusCode == 200) {
       Storage().saveDate('token', jsonDecode(response.body)['token']);
-      Storage().saveDate('id', jsonDecode(response.body)['_id']);
+      Storage().saveDate('id', jsonDecode(response.body)['user']['_id']);
       return {
         'status': 200,
         'message': 'Logged in successfuly',

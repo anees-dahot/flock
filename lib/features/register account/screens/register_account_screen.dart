@@ -101,7 +101,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   } else if (state is RegisterAccountSuccessState) {
                     NotificationHelper.showSuccessNotification(
                         context, state.message);
-                    Navigator.pushNamed(context, LoginScreen.routeName);
+                    Future.delayed(const Duration(seconds: 1), () {
+                      Navigator.pushNamed(context, LoginScreen.routeName);
+                    });
                   }
                 },
                 builder: (context, state) {
