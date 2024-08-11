@@ -51,9 +51,20 @@ authRouter.post("/api/signin", async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
     res.json({ token, ...user._doc });
+    console.log(token, ...user._doc)
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
+});
+
+//* get user data
+authRouter.get("/", async (req, res) => {
+  const user = await User.find();
+  res.json({ user });
+});
+authRouter.get("/user", async (req, res) => {
+  const user = await User.find();
+  res.json(user);
 });
 
 module.exports = authRouter;

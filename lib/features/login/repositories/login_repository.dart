@@ -18,7 +18,8 @@ class LoginRepository {
       return {
         'status': 200,
         'message': 'Account created successfuly',
-        'token': jsonDecode(response.body)['token']
+        'token': jsonDecode(response.body)['token'],
+        'id': jsonDecode(response.body)['_id'],
       };
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': jsonDecode(response.body)['msg']};
