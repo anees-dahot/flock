@@ -1,84 +1,77 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 class UserModel extends Equatable {
-  String? id;
-  String fullName;
-  String userName;
-  String bio;
-  String profileImage;
-  String? email;
-  String? password;
-  int phoneNumber;
-  DateTime dateOfBirth;
-  List<String>? followers;
-  List<String>? following;
+  final String id;
+  final String fullName;
+  final String userName;
+  final String bio;
+  final String profileImage;
+  final String email;
+  final String password;
+  final int phoneNumber;
+  final List<String> followers;
+  final List<String> following;
+  final DateTime dateOfBirth;
+
   UserModel({
-    this.id,
+    required this.id,
     required this.fullName,
     required this.userName,
     required this.bio,
     required this.profileImage,
-    this.email,
-    this.password,
+    required this.email,
+    required this.password,
     required this.phoneNumber,
+    required this.followers,
+    required this.following,
     required this.dateOfBirth,
-    this.followers,
-    this.following,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['_id'],
+      fullName: json['fullName'],
+      userName: json['userName'],
+      bio: json['Bio'],
+      profileImage: json['profileImage'],
+      email: json['email'],
+      password: json['password'],
+      phoneNumber: json['phoneNumber'],
+      followers: List<String>.from(json['followers']),
+      following: List<String>.from(json['following']),
+      dateOfBirth: DateTime.parse(json['DateOfBirth']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
       'fullName': fullName,
       'userName': userName,
-      'bio': bio,
+      'Bio': bio,
       'profileImage': profileImage,
       'email': email,
       'password': password,
       'phoneNumber': phoneNumber,
-      'dateOfBirth': dateOfBirth.millisecondsSinceEpoch,
       'followers': followers,
       'following': following,
+      'DateOfBirth': dateOfBirth.toIso8601String(),
     };
   }
 
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'] as String,
-      fullName: map['fullName'] as String,
-      userName: map['userName'] as String,
-      bio: map['bio'] as String,
-      profileImage: map['profileImage'] as String,
-      email: map['email'] as String,
-      password: map['password'] as String,
-      phoneNumber: map['phoneNumber'] as int,
-      dateOfBirth:
-          DateTime.fromMillisecondsSinceEpoch(map['dateOfBirth'] as int),
-      followers: List<String>.from((map['followers'] as List<String>)),
-      following: List<String>.from(map['following'] as List<String>),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
-
   @override
-  List<Object> get props => [
-        id!,
+  List<Object?> get props => [
+        id,
         fullName,
         userName,
         bio,
         profileImage,
-        email!,
-        password!,
+        email,
+        password,
         phoneNumber,
         dateOfBirth,
-        followers!,
-        following!,
+        followers,
+        following,
       ];
 }

@@ -52,7 +52,7 @@ class CreateAccountBloc extends Bloc<CreateAccountEvent, CreateAccountState> {
         );
       }
     } catch (e) {
-      emit(CreateAccountFailureState(error: e.toString()));
+      emit(CreateAccountFailureState(error: 'catch error: ${e.toString()}'));
     }
   }
 }

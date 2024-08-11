@@ -14,7 +14,12 @@ class CreateAccountRepository {
       String profileImage,
       int phoneNumber,
       DateTime dateOfBirth) async {
-    String? token = await Storage().getData('token') as String;
+    String? token = await Storage().getData('token') as String?;
+
+    // Check if the token is null
+    if (token == null) {
+      return {'status': 401, 'message': 'Unauthorized: Token is null'};
+    }
 
     final response = await http.post(
       Uri.parse('$baseUrl/api/create-account'),
@@ -33,22 +38,24 @@ class CreateAccountRepository {
     );
 
     if (response.statusCode == 200) {
-      // var responseData = jsonDecode(response.body)['user'];
-      // UserModel userModel = UserModel.fromJson(responseData);
-      // Storage().saveUser(userModel);
-      // var data = await Storage().getUser() as UserModel;
-      // print(data);
-      // print(data.fullName);
+      UserModel user = UserModel.fromJson(json.decode(response.body)['user']);
+ // Save user data in SharedPreferences
+  await Storage().saveUserData(user);
+
+  // Retrieve user data from SharedPreferences
+  UserModel? savedUser = await Storage().getUserData();
+  print(savedUser?.userName);
+
       return {
         'status': 200,
-        'message': 'Created account successfuly',
+        'message': 'Created account successfully',
       };
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': jsonDecode(response.body)['msg']};
     } else if (response.statusCode == 500) {
       return {'status': 500, 'message': jsonDecode(response.body)['error']};
     } else {
-      return {'status': 500, 'message': jsonDecode(response.body)['error']};
+      return {'status': 500, 'message': 'Unexpected error occurred'};
     }
   }
 }
