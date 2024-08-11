@@ -50,21 +50,40 @@ authRouter.post("/api/signin", async (req, res) => {
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
-    res.status(200).json({token, user});
-    console.log({token, user});
+    res.status(200).json({ token, user });
+    console.log({ token, user });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
-//* get user data
-authRouter.get("/", async (req, res) => {
-  const user = await User.find();
-  res.json({ user });
-});
-authRouter.get("/user", async (req, res) => {
-  const user = await User.find();
-  res.json(user);
+//* Create account
+authRouter.post("/api/create-account", auth, async (req, res) => {
+  try {
+    const { fullName, userName, Bio, profileImage, phoneNumber, dateOfBirth } =
+      req.body;
+
+    const id = req.user;
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+    user.fullName = fullName;
+    user.userName = userName;
+    user.Bio = Bio;
+    user.profileImage = profileImage;
+    user.phoneNumber = phoneNumber;
+    user.dateOfBirth = dateOfBirth;
+
+    user.save();
+
+    res.json(user);
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+    console.log(error.message);
+  }
 });
 
 module.exports = authRouter;
