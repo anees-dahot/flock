@@ -21,6 +21,11 @@ const userSchema = mongoose.Schema({
     trim: true,
     default: "",
   },
+  profileCover: {
+    type: String,
+    trim: true,
+    default: "",
+  },
   email: {
     type: String,
     required: true,
@@ -52,14 +57,28 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  followers: [
+  freinds: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: [],
     },
   ],
-  following: [
+  freindsRequests: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
+  likedPage: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: [],
+    },
+  ],
+  followedGroups: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

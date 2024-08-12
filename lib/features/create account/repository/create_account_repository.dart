@@ -39,12 +39,8 @@ class CreateAccountRepository {
 
     if (response.statusCode == 200) {
       UserModel user = UserModel.fromJson(json.decode(response.body)['user']);
- // Save user data in SharedPreferences
-  await Storage().saveUserData(user);
 
-  // Retrieve user data from SharedPreferences
-  UserModel? savedUser = await Storage().getUserData();
-  print(savedUser?.userName);
+      await Storage().saveUserData(user);
 
       return {
         'status': 200,
