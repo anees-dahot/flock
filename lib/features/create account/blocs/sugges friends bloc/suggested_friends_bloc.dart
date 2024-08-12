@@ -12,6 +12,8 @@ class SuggestedFriendsBloc
   final List<String> sentRequestIds = [];
   final List<UserModel> suggestedFriends = [];
   final SuggestedFriendsRepository suggestedFriendsRepository;
+  final int maxRequests = 5;
+  int currentRequestCount = 0;
 
   SuggestedFriendsBloc({required this.suggestedFriendsRepository})
       : super(SuggestedFriendsInitial()) {
@@ -41,7 +43,7 @@ class SuggestedFriendsBloc
 
   Future<void> sendFriendRequestEvent(
       SendFriendRequestEvent event, Emitter<SuggestedFriendsState> emit) async {
-    emit(SendFriendRequestSuccessState()); // Emit loading state
+    emit(SendFriendRequestSuccessState());
 
     try {
       final response =
@@ -49,10 +51,14 @@ class SuggestedFriendsBloc
 
       if (response['status'] == 200) {
         sentRequestIds.add(event.userId);
+        currentRequestCount = sentRequestIds.length;
 
-        // Emit the updated list of suggested friends with the updated sentRequestIds
         emit(SuggestedFriendsSuccessState(
             suggestedFriends: List.from(suggestedFriends)));
+
+        if (currentRequestCount == maxRequests) {
+          emit(MaxRequestsReachedState());
+        }
       } else {
         emit(SuggestedFriendsFailureState(error: response['message']));
       }
@@ -61,13 +67,12 @@ class SuggestedFriendsBloc
     }
   }
 
-  Future<void> checkFriendRequestStatus(
-      CheckFriendRequestStatusEvent event, Emitter<SuggestedFriendsState> emit) async {
+  Future<void> checkFriendRequestStatus(CheckFriendRequestStatusEvent event,
+      Emitter<SuggestedFriendsState> emit) async {
     try {
       final response = await suggestedFriendsRepository
           .checkFriendRequestStatus(event.userId);
       if (response['status'] == 200) {
-        // Emit state with the request status
         emit(FriendRequestStatusState(isRequestSent: response['data']));
       }
     } catch (e) {
