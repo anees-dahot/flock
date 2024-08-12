@@ -10,8 +10,13 @@ import '../../../utils/flush_message.dart';
 
 class CreateAccount extends StatefulWidget {
   static const String routeName = 'create-accounnt';
-  const CreateAccount({super.key, required this.image});
-  final String image;
+  const CreateAccount({
+    super.key,
+    required this.profileImage,
+    required this.profileCover,
+  });
+  final String profileImage;
+  final String profileCover;
   @override
   State<CreateAccount> createState() => _CreateAccountState();
 }
@@ -43,6 +48,8 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   void initState() {
     _createAccountBloc = CreateAccountBloc(CreateAccountRepository());
+    print(widget.profileCover);
+    print(widget.profileImage);
     super.initState();
   }
 
@@ -169,7 +176,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                 CreateAccountFunction(
                                   fullName: fullName.text,
                                   userName: userName.text,
-                                  profileImage: widget.image,
+                                  profileImage: widget.profileImage,
                                   bio: bio.text,
                                   dateOfBirth: _selectedDate!,
                                   phoneNumber: int.parse(phoneNumber.text),

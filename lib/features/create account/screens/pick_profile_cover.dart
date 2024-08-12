@@ -3,20 +3,20 @@ import 'dart:io';
 import 'package:flock/core/widgets/custom_button.dart';
 import 'package:flock/features/create%20account/blocs/image%20picker%20bloc/image_picker_bloc.dart';
 import 'package:flock/features/create%20account/screens/create_account.dart';
-import 'package:flock/features/create%20account/screens/pick_profile_cover.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PickProfileImage extends StatefulWidget {
-  static const String routeName = 'pick-image-screen';
-  const PickProfileImage({super.key});
+class PickProfileCover extends StatefulWidget {
+  static const String routeName = 'cover-image-screen';
+  const PickProfileCover({super.key, required this.profileImage});
+  final String profileImage;
 
   @override
-  State<PickProfileImage> createState() => _PickProfileImageState();
+  State<PickProfileCover> createState() => _PickProfileCoverState();
 }
 
-class _PickProfileImageState extends State<PickProfileImage> {
+class _PickProfileCoverState extends State<PickProfileCover> {
   late ImagePickerBloc _imagePickerBloc;
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _PickProfileImageState extends State<PickProfileImage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Pick Profile Image',
+            'Pick Profile Cover',
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           backgroundColor: Theme.of(context).colorScheme.background,
@@ -115,9 +115,15 @@ class _PickProfileImageState extends State<PickProfileImage> {
                             width: width,
                             height: height,
                             onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  PickProfileCover.routeName,
-                                  arguments: state.image!.path);
+                              final List data = [
+                                widget.profileImage,
+                                state.image!.path,
+                              ];
+                              Navigator.pushNamed(
+                                context,
+                                CreateAccount.routeName,
+                                arguments: data,
+                              );
                             },
                             text: 'Next')
                       ],
