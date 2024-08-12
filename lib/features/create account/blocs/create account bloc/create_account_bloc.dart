@@ -19,12 +19,14 @@ class CreateAccountBloc extends Bloc<CreateAccountEvent, CreateAccountState> {
     emit(CreateAccountLoadingState());
     try {
       final response = await createAccountRepository.createAccount(
-          event.fullName,
-          event.userName,
-          event.bio,
-          event.profileImage,
-          event.phoneNumber,
-          event.dateOfBirth);
+        event.fullName,
+        event.userName,
+        event.bio,
+        event.profileImage,
+        event.profileCover,
+        event.phoneNumber,
+        event.dateOfBirth,
+      );
 
       if (response['status'] == 200) {
         emit(

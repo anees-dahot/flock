@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flock/models/user.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,14 +13,26 @@ class CreateAccountRepository {
       String userName,
       String bio,
       String profileImage,
+      String profileCover,
       int phoneNumber,
       DateTime dateOfBirth) async {
-    String? token = await Storage().getData('token') as String?;
+    String? token = await Storage().getData('token') as String;
 
     // Check if the token is null
     if (token == null) {
       return {'status': 401, 'message': 'Unauthorized: Token is null'};
     }
+
+    final cloudinary = CloudinaryPublic('doaewaso1', 'one9vigp');
+    String image = '';
+    String cover = '';
+
+    final CloudinaryResponse res = await cloudinary
+        .uploadFile(CloudinaryFile.fromFile(profileImage, folder: fullName));
+    final CloudinaryResponse res2 = await cloudinary
+        .uploadFile(CloudinaryFile.fromFile(profileCover, folder: fullName));
+    image = res.secureUrl;
+    cover = res2.secureUrl;
 
     final response = await http.post(
       Uri.parse('$baseUrl/api/create-account'),
@@ -31,7 +44,8 @@ class CreateAccountRepository {
         "fullName": fullName,
         "userName": userName,
         "Bio": bio,
-        "profileImage": profileImage,
+        "profileImage": image,
+        "profileCover": cover,
         "phoneNumber": phoneNumber,
         "dateOfBirth": dateOfBirth.toIso8601String(),
       }),

@@ -11,6 +11,7 @@ class CreateAccountFunction extends CreateAccountEvent {
   final String fullName;
   final String userName;
   final String profileImage;
+  final String profileCover;
   final String bio;
   final DateTime dateOfBirth;
   final int phoneNumber;
@@ -19,11 +20,19 @@ class CreateAccountFunction extends CreateAccountEvent {
       {required this.fullName,
       required this.userName,
       required this.profileImage,
+      required this.profileCover,
       required this.bio,
       required this.dateOfBirth,
       required this.phoneNumber});
 
   @override
-  List<Object> get props =>
-      [fullName, userName, profileImage, bio, dateOfBirth, phoneNumber];
+  List<Object> get props => [
+        fullName,
+        userName,
+        profileImage,
+        profileCover,
+        bio,
+        dateOfBirth,
+        phoneNumber
+      ];
 }

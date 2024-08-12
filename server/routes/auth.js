@@ -60,8 +60,15 @@ authRouter.post("/api/signin", async (req, res) => {
 //* Create account
 authRouter.post("/api/create-account", auth, async (req, res) => {
   try {
-    const { fullName, userName, Bio, profileImage, phoneNumber, dateOfBirth } =
-      req.body;
+    const {
+      fullName,
+      userName,
+      Bio,
+      profileImage,
+      profileCover,
+      phoneNumber,
+      dateOfBirth,
+    } = req.body;
 
     const id = req.user;
 
@@ -74,13 +81,14 @@ authRouter.post("/api/create-account", auth, async (req, res) => {
     user.userName = userName;
     user.Bio = Bio;
     user.profileImage = profileImage;
+    user.profileCover = profileCover;
     user.phoneNumber = phoneNumber;
     user.dateOfBirth = dateOfBirth;
 
     user.save();
 
-    res.status(200).json({user});
-    console.log({user});
+    res.status(200).json({ user });
+    console.log({ user });
   } catch (error) {
     res.status(400).send({ error: error.message });
     console.log(error.message);

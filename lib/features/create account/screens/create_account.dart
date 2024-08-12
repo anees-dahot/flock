@@ -48,8 +48,6 @@ class _CreateAccountState extends State<CreateAccount> {
   @override
   void initState() {
     _createAccountBloc = CreateAccountBloc(CreateAccountRepository());
-    print(widget.profileCover);
-    print(widget.profileImage);
     super.initState();
   }
 
@@ -177,6 +175,7 @@ class _CreateAccountState extends State<CreateAccount> {
                                   fullName: fullName.text,
                                   userName: userName.text,
                                   profileImage: widget.profileImage,
+                                  profileCover: widget.profileCover,
                                   bio: bio.text,
                                   dateOfBirth: _selectedDate!,
                                   phoneNumber: int.parse(phoneNumber.text),
