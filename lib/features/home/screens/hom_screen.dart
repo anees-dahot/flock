@@ -1,11 +1,26 @@
+import 'package:flock/features/create%20account/repository/suggested_friends_repositoy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flock/core/theme/theme_cubit.dart';
 import 'package:flock/features/login/screens/login_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   
 static const String routeName = 'home-screen';
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  SuggestedFriendsRepository suggestedFriendsRepository = SuggestedFriendsRepository()
+;
+  @override
+  void initState() {
+   suggestedFriendsRepository.getSuggestedFriends();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -43,6 +43,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^26.2.8 
   another_flushbar: ^1.12.30
   cloudinary_public: ^0.23.1
+  cached_network_image: ^3.4.0
 
 dev_dependencies:
   flutter_test:

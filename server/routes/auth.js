@@ -46,7 +46,7 @@ authRouter.post("/api/signin", async (req, res) => {
 
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
-      const msg = "Incorrect password."
+      const msg = "Incorrect password.";
       return res.status(400).json({ msg });
     }
 
@@ -97,9 +97,9 @@ authRouter.post("/api/create-account", auth, async (req, res) => {
 });
 
 //* Get suggested friends
-authRouter.get("/suggested-friends", async (req, res) => {
+authRouter.get("/api/suggested-friends", async (req, res) => {
   const user = await User.find().limit(20);
-  res.json(user);
+  res.status(200).json(user);
 });
 
 module.exports = authRouter;
