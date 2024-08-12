@@ -102,7 +102,7 @@ authRouter.get("/api/suggested-friends", auth, async (req, res) => {
     const userId = req.user;
     const users = await User.find({ _id: { $ne: userId } }).limit(20);
     res.status(200).json(users);
-    console.log(users)
+    console.log(users);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -111,16 +111,35 @@ authRouter.get("/api/suggested-friends", auth, async (req, res) => {
 //* Send friends request
 authRouter.post("/api/send-friend-request/:userId", auth, async (req, res) => {
   try {
-    const { userId } = req.params; // Extract userId from request parameters
-    const user = await User.findById(userId); // Use userId directly
+    const { userId } = req.params; 
+    const user = await User.findById(userId);
     if (!user) return res.status(400).json({ msg: "User does not exist!" });
     user.friendsRequests.push(req.user);
     await user.save();
-    res.status(200).json(user); // Return the updated user
+    res.status(200).json(user);
   } catch (e) {
     res.status(500).json({ error: e.message });
     console.log(e.message);
   }
 });
+
+//* Check friends requests
+authRouter.post(
+  "/api/check-friend-requests/:userId",
+  auth,
+  async (req, res) => {
+    try {
+      const { userId } = req.params; 
+      const user = await User.findById(userId);
+      if (!user) return res.status(400).json({ msg: "User does not exist!" });
+      const isRequestSent = user.friendsRequests.includes(req.user);
+
+      res.status(200).json({ isRequestSent }); 
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+      console.log(e.message);
+    }
+  }
+);
 
 module.exports = authRouter;
