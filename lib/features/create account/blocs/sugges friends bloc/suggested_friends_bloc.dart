@@ -17,6 +17,7 @@ class SuggestedFriendsBloc
     required this.suggestedFriendsRepository,
   }) : super(SuggestedFriendsInitial()) {
     on<GetSuggestedFriendsEvent>(getSuggestedFriendsEvent);
+    on<SendFriendRequestEvent>(sendFriendRequestEvent);
   }
 
   FutureOr<void> getSuggestedFriendsEvent(GetSuggestedFriendsEvent event,
@@ -35,6 +36,25 @@ class SuggestedFriendsBloc
       }
     } catch (e) {
       emit(SuggestedFriendsFailureState(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> sendFriendRequestEvent(
+      SendFriendRequestEvent event, Emitter<SuggestedFriendsState> emit) async {
+    try {
+      final response =
+          await suggestedFriendsRepository.sendFriendRequest(event.userId);
+      if (response['status'] == 200) {
+        emit(SendFriendRequestSuccessState());
+      } else if (response['status'] == 400) {
+        emit(SendFriendRequestFailureState(error: response['message']));
+      } else if (response['status'] == 500) {
+        emit(SendFriendRequestFailureState(error: response['message']));
+      } else {
+        emit(SendFriendRequestFailureState(error: response['message']));
+      }
+    } catch (e) {
+      emit(SendFriendRequestFailureState(error: e.toString()));
     }
   }
 }
