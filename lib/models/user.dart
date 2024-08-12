@@ -1,5 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 class UserModel extends Equatable {
   final String id;
@@ -7,25 +7,31 @@ class UserModel extends Equatable {
   final String userName;
   final String bio;
   final String profileImage;
+  final String profileCover;
   final String email;
   final String password;
-  final int phoneNumber;
-  final List<String> followers;
-  final List<String> following;
   final DateTime dateOfBirth;
+  final int phoneNumber;
+  final List<String> friends;
+  final List<String> friendsRequests;
+  final List<String> likedPage;
+  final List<String> followedGroups;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.fullName,
     required this.userName,
     required this.bio,
     required this.profileImage,
+    required this.profileCover,
     required this.email,
     required this.password,
-    required this.phoneNumber,
-    required this.followers,
-    required this.following,
     required this.dateOfBirth,
+    required this.phoneNumber,
+    required this.friends,
+    required this.friendsRequests,
+    required this.likedPage,
+    required this.followedGroups,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -35,12 +41,15 @@ class UserModel extends Equatable {
       userName: json['userName'],
       bio: json['Bio'],
       profileImage: json['profileImage'],
+      profileCover: json['profileCover'],
       email: json['email'],
       password: json['password'],
-      phoneNumber: json['phoneNumber'],
-      followers: List<String>.from(json['followers']),
-      following: List<String>.from(json['following']),
       dateOfBirth: DateTime.parse(json['DateOfBirth']),
+      phoneNumber: json['phoneNumber'],
+      friends: List<String>.from(json['friends']),
+      friendsRequests: List<String>.from(json['friendsRequests']),
+      likedPage: List<String>.from(json['likedPage']),
+      followedGroups: List<String>.from(json['followedGroups']),
     );
   }
 
@@ -51,12 +60,15 @@ class UserModel extends Equatable {
       'userName': userName,
       'Bio': bio,
       'profileImage': profileImage,
+      'profileCover': profileCover,
       'email': email,
       'password': password,
-      'phoneNumber': phoneNumber,
-      'followers': followers,
-      'following': following,
       'DateOfBirth': dateOfBirth.toIso8601String(),
+      'phoneNumber': phoneNumber,
+      'friends': friends,
+      'friendsRequests': friendsRequests,
+      'likedPage': likedPage,
+      'followedGroups': followedGroups,
     };
   }
 
@@ -67,11 +79,14 @@ class UserModel extends Equatable {
         userName,
         bio,
         profileImage,
+        profileCover,
         email,
         password,
-        phoneNumber,
         dateOfBirth,
-        followers,
-        following,
+        phoneNumber,
+        friends,
+        friendsRequests,
+        likedPage,
+        followedGroups,
       ];
 }

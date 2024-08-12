@@ -57,14 +57,14 @@ const userSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  freinds: [
+  friends: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: [],
     },
   ],
-  freindsRequests: [
+  friendsRequests: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -74,7 +74,7 @@ const userSchema = mongoose.Schema({
   likedPage: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Pages",
       default: [],
     },
   ],
