@@ -97,7 +97,7 @@ authRouter.post("/api/create-account", auth, async (req, res) => {
 });
 
 //* Get suggested friends
-authRouter.get("/user", async (req, res) => {
+authRouter.get("/suggested-friends", async (req, res) => {
   const user = await User.find().limit(20);
   res.json(user);
 });
