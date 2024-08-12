@@ -1,4 +1,5 @@
 import 'package:flock/core/theme/theme_cubit.dart';
+import 'package:flock/features/create%20account/screens/suggested_friends.dart';
 import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: themeMode,
             onGenerateRoute: generateRoute,
-            initialRoute: HomeScreen.routeName,
+            initialRoute: SuggestedFriends.routeName,
           );
         },
       ),
