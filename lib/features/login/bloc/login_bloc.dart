@@ -19,29 +19,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       final response = await loginRepository.login(event.email, event.password);
       if (response['status'] == 200) {
-        emit(
-          LoginSuccessState(
-            message: response['message'],
-          ),
-        );
+        emit(LoginSuccessState(message: response['message']));
       } else if (response['status'] == 400) {
-        emit(
-          LoginFailureState(
-            error: response['message'],
-          ),
-        );
+        emit(LoginFailureState(error: response['message']));
       } else if (response['status'] == 500) {
-        emit(
-          LoginFailureState(
-            error: response['message'],
-          ),
-        );
+        emit(LoginFailureState(error: response['message']));
       } else {
-        emit(
-          LoginFailureState(
-            error: response['message'],
-          ),
-        );
+        emit(LoginFailureState(error: response['message']));
       }
     } catch (e) {
       emit(LoginFailureState(error: e.toString()));

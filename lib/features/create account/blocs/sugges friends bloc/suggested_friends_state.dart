@@ -9,20 +9,14 @@ sealed class SuggestedFriendsState extends Equatable {
 
 final class SuggestedFriendsInitial extends SuggestedFriendsState {}
 
-class SuggestedFriendsLoadingState extends SuggestedFriendsState {
-  final List<UserModel> suggestedFriends;
-
-  const SuggestedFriendsLoadingState({required this.suggestedFriends});
-  @override
-  List<Object> get props => [suggestedFriends];
-}
+class SuggestedFriendsLoadingState extends SuggestedFriendsState {}
 
 class SuggestedFriendsSuccessState extends SuggestedFriendsState {
-  final String message;
+  final List<UserModel> suggestedFriends;
 
-  const SuggestedFriendsSuccessState({required this.message});
+  const SuggestedFriendsSuccessState({required this.suggestedFriends});
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [suggestedFriends];
 }
 
 class SuggestedFriendsFailureState extends SuggestedFriendsState {
