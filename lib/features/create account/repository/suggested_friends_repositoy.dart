@@ -38,9 +38,9 @@ class SuggestedFriendsRepository {
 
   Future<Map<String, dynamic>> sendFriendRequest(String userId) async {
     String? token = await Storage().getData('token') as String;
-
-    final response = await http.get(
-      Uri.parse('$baseUrl/api/send-friend-request/:userId'),
+print(userId);
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/send-friend-request/$userId'),
       headers: {
         'Content-Type': 'application/json',
         'x-auth-token': token,

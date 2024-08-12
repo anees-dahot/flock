@@ -15,6 +15,7 @@ class SuggestedFriends extends StatefulWidget {
 
 class _SuggestedFriendsState extends State<SuggestedFriends> {
   late SuggestedFriendsBloc _suggestedFriendsBloc;
+
   @override
   void initState() {
     _suggestedFriendsBloc = SuggestedFriendsBloc(
@@ -53,7 +54,10 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
             SizedBox(height: height * 0.05),
             BlocConsumer<SuggestedFriendsBloc, SuggestedFriendsState>(
               bloc: _suggestedFriendsBloc,
-              listener: (context, state) {},
+              buildWhen: (previous, current) => current is! FriendRequestState,
+              listener: (context, state) {
+                // Handle any additional logic if needed
+              },
               builder: (context, state) {
                 if (state is SuggestedFriendsLoadingState) {
                   return const Center(
@@ -63,60 +67,107 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                 if (state is SuggestedFriendsFailureState) {
                   return Center(child: Text(state.error));
                 } else if (state is SuggestedFriendsSuccessState) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: state.suggestedFriends.length,
-                      itemBuilder: (context, index) {
-                        var data = state.suggestedFriends[index];
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4),
-                          child: Card(
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 20),
-                              width: width * 0.9,
-                              height: height * 0.07,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(14)),
-                              child: ListTile(
-                                leading: SizedBox(
-                                  width: 45,
-                                  height: 45,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: CachedNetworkImage(
-                                      imageUrl: data.profileImage,
-                                      fit: BoxFit.cover,
+                  if (state.suggestedFriends.isEmpty) {
+                    return const Center(child: Text('No friends available'));
+                  } else {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: state.suggestedFriends.length,
+                        itemBuilder: (context, index) {
+                          var data = state.suggestedFriends[index];
+                          bool isRequestSent = _suggestedFriendsBloc
+                              .sentRequestIds
+                              .contains(data.id);
+
+                          bool isSendingRequest = state
+                                  is SendFriendRequestSuccessState &&
+                              isRequestSent;
+
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 4),
+                            child: Card(
+                              child: Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 20),
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.07,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: ListTile(
+                                  leading: SizedBox(
+                                    width: 45,
+                                    height: 45,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: CachedNetworkImage(
+                                        imageUrl: data.profileImage,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                title: Text(data.fullName),
-                                trailing: GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    width: width * 0.3,
-                                    height: height * 0.07,
-                                    decoration: BoxDecoration(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    child: Center(
-                                        child: Text(
-                                      'Add Friend',
-                                      style:
-                                          Theme.of(context).textTheme.bodyLarge,
-                                    )),
+                                  title: Text(data.fullName),
+                                  trailing: BlocBuilder<SuggestedFriendsBloc,
+                                      SuggestedFriendsState>(
+                                    bloc: _suggestedFriendsBloc,
+                                    buildWhen: (previous, current) =>
+                                        current is FriendRequestState,
+                                    builder: (context, state) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          if (!isRequestSent) {
+                                            _suggestedFriendsBloc.add(
+                                                SendFriendRequestEvent(
+                                                    userId: data.id));
+                                          } else {
+                                            // Handle cancel request logic here if needed
+                                          }
+                                        },
+                                        child: Container(
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.3,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.07,
+                                          decoration: BoxDecoration(
+                                            color:isRequestSent ?Theme.of(context).colorScheme.onBackground : Theme.of(context)
+                                                .colorScheme
+                                                .primary,
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          child: Center(
+                                            child: isSendingRequest
+                                                ? const CircularProgressIndicator(
+                                                    color: Colors.white)
+                                                : Text(
+                                                    isRequestSent
+                                                        ? 'Cancel'
+                                                        : 'Add Friend',
+                                                    style:TextStyle(
+                                                      fontSize: 14, 
+                                                      fontWeight: FontWeight.w500,
+                                                      color: isRequestSent ? Colors.white:const Color.fromARGB(255, 29, 29, 29)
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                          );
+                        },
+                      ),
+                    );
+                  }
                 } else {
                   return const Center(
                     child: Text('No data'),

@@ -102,21 +102,24 @@ authRouter.get("/api/suggested-friends", auth, async (req, res) => {
     const userId = req.user;
     const users = await User.find({ _id: { $ne: userId } }).limit(20);
     res.status(200).json(users);
+    console.log(users)
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
 //* Send friends request
-authRouter.get("/api/send-friend-request/:userId", auth, async (req, res) => {
+authRouter.post("/api/send-friend-request/:userId", auth, async (req, res) => {
   try {
-    const user = await User.findById(userId);
+    const { userId } = req.params; // Extract userId from request parameters
+    const user = await User.findById(userId); // Use userId directly
     if (!user) return res.status(400).json({ msg: "User does not exist!" });
-    user.friendsRequests.push(req.id);
+    user.friendsRequests.push(req.user);
     await user.save();
-    res.status(200).json(users);
+    res.status(200).json(user); // Return the updated user
   } catch (e) {
     res.status(500).json({ error: e.message });
+    console.log(e.message);
   }
 });
 

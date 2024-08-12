@@ -7,6 +7,8 @@ sealed class SuggestedFriendsState extends Equatable {
   List<Object> get props => [];
 }
 
+abstract class FriendRequestState extends SuggestedFriendsState {}
+
 final class SuggestedFriendsInitial extends SuggestedFriendsState {}
 
 class SuggestedFriendsLoadingState extends SuggestedFriendsState {}
@@ -27,12 +29,14 @@ class SuggestedFriendsFailureState extends SuggestedFriendsState {
   List<Object> get props => [error];
 }
 
-class SendFriendRequestSuccessState extends SuggestedFriendsState {}
+class SendFriendRequestSuccessState extends FriendRequestState {}
 
-class SendFriendRequestFailureState extends SuggestedFriendsState {
+class SendFriendRequestFailureState extends FriendRequestState {
   final String error;
 
-  const SendFriendRequestFailureState({required this.error});
+  SendFriendRequestFailureState({required this.error});
   @override
   List<Object> get props => [error];
 }
+
+class SendFriendRequestLoadingState extends FriendRequestState {}
