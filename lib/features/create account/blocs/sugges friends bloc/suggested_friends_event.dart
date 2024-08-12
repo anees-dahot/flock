@@ -16,3 +16,11 @@ class SendFriendRequestEvent extends SuggestedFriendsEvent {
   @override
   List<Object> get props => [userId];
 }
+
+class CheckFriendRequestStatusEvent extends SuggestedFriendsEvent {
+  final String userId;
+
+  const CheckFriendRequestStatusEvent({required this.userId});
+  @override
+  List<Object> get props => [userId];
+}

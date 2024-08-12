@@ -31,6 +31,14 @@ class SuggestedFriendsFailureState extends SuggestedFriendsState {
 
 class SendFriendRequestSuccessState extends FriendRequestState {}
 
+class FriendRequestStatusState extends SuggestedFriendsState {
+  final bool isRequestSent;
+
+  FriendRequestStatusState({required this.isRequestSent});
+   @override
+  List<Object> get props => [isRequestSent];
+}
+
 class SendFriendRequestFailureState extends FriendRequestState {
   final String error;
 

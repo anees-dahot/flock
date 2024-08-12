@@ -17,6 +17,7 @@ class SuggestedFriendsBloc
       : super(SuggestedFriendsInitial()) {
     on<GetSuggestedFriendsEvent>(getSuggestedFriendsEvent);
     on<SendFriendRequestEvent>(sendFriendRequestEvent);
+    on<CheckFriendRequestStatusEvent>(checkFriendRequestStatus);
   }
 
   Future<void> getSuggestedFriendsEvent(GetSuggestedFriendsEvent event,
@@ -54,6 +55,20 @@ class SuggestedFriendsBloc
             suggestedFriends: List.from(suggestedFriends)));
       } else {
         emit(SuggestedFriendsFailureState(error: response['message']));
+      }
+    } catch (e) {
+      emit(SuggestedFriendsFailureState(error: e.toString()));
+    }
+  }
+
+  Future<void> checkFriendRequestStatus(
+      CheckFriendRequestStatusEvent event, Emitter<SuggestedFriendsState> emit) async {
+    try {
+      final response = await suggestedFriendsRepository
+          .checkFriendRequestStatus(event.userId);
+      if (response['status'] == 200) {
+        // Emit state with the request status
+        emit(FriendRequestStatusState(isRequestSent: response['data']));
       }
     } catch (e) {
       emit(SuggestedFriendsFailureState(error: e.toString()));

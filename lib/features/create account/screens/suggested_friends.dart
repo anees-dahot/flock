@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/features/create%20account/blocs/sugges%20friends%20bloc/suggested_friends_bloc.dart';
 import 'package:flock/features/create%20account/repository/suggested_friends_repositoy.dart';
+import 'package:flock/models/user.dart';
+import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +17,22 @@ class SuggestedFriends extends StatefulWidget {
 
 class _SuggestedFriendsState extends State<SuggestedFriends> {
   late SuggestedFriendsBloc _suggestedFriendsBloc;
+  String? id;
 
   @override
   void initState() {
     _suggestedFriendsBloc = SuggestedFriendsBloc(
         suggestedFriendsRepository: SuggestedFriendsRepository());
     _suggestedFriendsBloc.add(GetSuggestedFriendsEvent());
+    assignIt();
     super.initState();
+  }
+
+  void assignIt() async {
+    await Storage().getUserData().then((value) {
+      id = value!.id;
+    });
+    print(id);
   }
 
   @override
@@ -79,10 +90,6 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                               .sentRequestIds
                               .contains(data.id);
 
-                          bool isSendingRequest = state
-                                  is SendFriendRequestSuccessState &&
-                              isRequestSent;
-
                           return Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8.0, vertical: 4),
@@ -121,9 +128,7 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                                             _suggestedFriendsBloc.add(
                                                 SendFriendRequestEvent(
                                                     userId: data.id));
-                                          } else {
-                                            // Handle cancel request logic here if needed
-                                          }
+                                          } else {}
                                         },
                                         child: Container(
                                           width: MediaQuery.of(context)
@@ -135,26 +140,38 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                                                   .height *
                                               0.07,
                                           decoration: BoxDecoration(
-                                            color:isRequestSent ?Theme.of(context).colorScheme.onBackground : Theme.of(context)
-                                                .colorScheme
-                                                .primary,
+                                            color: isRequestSent ||
+                                                    data.friendsRequests
+                                                        .contains(id)
+                                                ? Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground // Change color if request is sent or already requested
+                                                : Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
                                             borderRadius:
                                                 BorderRadius.circular(12),
                                           ),
                                           child: Center(
-                                            child: isSendingRequest
-                                                ? const CircularProgressIndicator(
-                                                    color: Colors.white)
-                                                : Text(
-                                                    isRequestSent
-                                                        ? 'Cancel'
-                                                        : 'Add Friend',
-                                                    style:TextStyle(
-                                                      fontSize: 14, 
-                                                      fontWeight: FontWeight.w500,
-                                                      color: isRequestSent ? Colors.white:const Color.fromARGB(255, 29, 29, 29)
-                                                    ),
-                                                  ),
+                                            child: Text(
+                                              isRequestSent
+                                                  ? 'Requested'
+                                                  : data.friendsRequests
+                                                          .contains(id)
+                                                      ? 'Requested' // Change text if already requested
+                                                      : 'Add Friend',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                color: isRequestSent ||
+                                                        data.friendsRequests
+                                                            .contains(id)
+                                                    ? Colors
+                                                        .white // Change texst color for both conditions
+                                                    : const Color.fromARGB(
+                                                        255, 29, 29, 29),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       );
