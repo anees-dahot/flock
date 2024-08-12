@@ -35,4 +35,26 @@ class SuggestedFriendsRepository {
       return {'status': response.statusCode, 'message': responseBody['error']};
     }
   }
+
+  Future<Map<String, dynamic>> sendFriendRequest(String userId) async {
+    String? token = await Storage().getData('token') as String;
+
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/send-friend-request/:userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token,
+      },
+    );
+
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return {'status': 200, 'message': 'Request sent.'};
+    } else if (response.statusCode == 400) {
+      return {'status': 400, 'message': responseBody['msg']};
+    } else {
+      return {'status': response.statusCode, 'message': responseBody['error']};
+    }
+  }
 }

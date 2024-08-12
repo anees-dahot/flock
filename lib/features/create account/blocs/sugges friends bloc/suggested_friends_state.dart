@@ -26,3 +26,13 @@ class SuggestedFriendsFailureState extends SuggestedFriendsState {
   @override
   List<Object> get props => [error];
 }
+
+class SendFriendRequestSuccessState extends SuggestedFriendsState {}
+
+class SendFriendRequestErrorState extends SuggestedFriendsState {
+  final String error;
+
+  const SendFriendRequestErrorState({required this.error});
+  @override
+  List<Object> get props => [error];
+}

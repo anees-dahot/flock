@@ -8,3 +8,11 @@ sealed class SuggestedFriendsEvent extends Equatable {
 }
 
 class GetSuggestedFriendsEvent extends SuggestedFriendsEvent {}
+
+class SendFriendRequestEvent extends SuggestedFriendsEvent {
+  final String userId;
+
+  const SendFriendRequestEvent({required this.userId});
+  @override
+  List<Object> get props => [userId];
+}

@@ -98,20 +98,26 @@ authRouter.post("/api/create-account", auth, async (req, res) => {
 
 //* Get suggested friends
 authRouter.get("/api/suggested-friends", auth, async (req, res) => {
-  const userId = req.user;
-  const users = await User.find({ _id: { $ne: userId } }).limit(20);
-  res.status(200).json(users);
+  try {
+    const userId = req.user;
+    const users = await User.find({ _id: { $ne: userId } }).limit(20);
+    res.status(200).json(users);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
 });
 
 //* Send friends request
 authRouter.get("/api/send-friend-request/:userId", auth, async (req, res) => {
-  const user = await User.findById(userId);
-  if (!user) {
-    return res.status(400).json({ msg: "User does not exist!" });
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(400).json({ msg: "User does not exist!" });
+    user.friendsRequests.push(req.id);
+    await user.save();
+    res.status(200).json(users);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
   }
-  user.friendsRequests.push(req.id);
-  await user.save();
-  res.status(200).json(users);
 });
 
 module.exports = authRouter;
