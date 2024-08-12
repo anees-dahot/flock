@@ -46,7 +46,8 @@ authRouter.post("/api/signin", async (req, res) => {
 
     const isMatch = await bcryptjs.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Incorrect password." });
+      const msg = "Incorrect password."
+      return res.status(400).json({ msg });
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
@@ -93,6 +94,12 @@ authRouter.post("/api/create-account", auth, async (req, res) => {
     res.status(400).send({ error: error.message });
     console.log(error.message);
   }
+});
+
+//* Get suggested friends
+authRouter.get("/user", async (req, res) => {
+  const user = await User.find().limit(20);
+  res.json(user);
 });
 
 module.exports = authRouter;

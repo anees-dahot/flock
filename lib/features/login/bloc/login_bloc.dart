@@ -27,25 +27,24 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else if (response['status'] == 400) {
         emit(
           LoginFailureState(
-            error: response['msg'],
+            error: response['message'],
           ),
         );
       } else if (response['status'] == 500) {
         emit(
           LoginFailureState(
-            error: response['error'],
+            error: response['message'],
           ),
         );
       } else {
         emit(
           LoginFailureState(
-            error: response['error'],
+            error: response['message'],
           ),
         );
       }
     } catch (e) {
       emit(LoginFailureState(error: e.toString()));
-      print(e.toString());
     }
   }
 }
