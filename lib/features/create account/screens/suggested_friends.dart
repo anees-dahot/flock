@@ -138,7 +138,7 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.07,
+                                              0.06,
                                           decoration: BoxDecoration(
                                             color: isRequestSent ||
                                                     data.friendsRequests
@@ -166,8 +166,7 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                                                 color: isRequestSent ||
                                                         data.friendsRequests
                                                             .contains(id)
-                                                    ? Colors
-                                                        .white // Change texst color for both conditions
+                                                    ? Theme.of(context).colorScheme.background // Change texst color for both conditions
                                                     : const Color.fromARGB(
                                                         255, 29, 29, 29),
                                               ),
