@@ -39,7 +39,9 @@ class _TabScreenState extends State<TabScreen>
               icon: const Icon(CupertinoIcons.search),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                print('bubble cliked');
+              },
               icon: const Icon(CupertinoIcons.chat_bubble_text),
             ),
           ],
