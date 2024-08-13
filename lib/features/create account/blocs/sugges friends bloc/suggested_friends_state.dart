@@ -48,5 +48,3 @@ class SendFriendRequestFailureState extends FriendRequestState {
 }
 
 class SendFriendRequestLoadingState extends FriendRequestState {}
-
-class MaxRequestsReachedState extends SuggestedFriendsState {}

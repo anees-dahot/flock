@@ -29,9 +29,6 @@ class SuggestedFriendsBloc
   Future<void> _initSharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
     _loadSentRequestIds();
-    print(sentRequestIds);
-    print(sentRequestIds.length);
-    print('added');
   }
 
   void _loadSentRequestIds() {
@@ -78,10 +75,6 @@ class SuggestedFriendsBloc
 
         emit(SuggestedFriendsSuccessState(
             suggestedFriends: List.from(suggestedFriends)));
-
-        if (currentRequestCount == maxRequests) {
-          emit(MaxRequestsReachedState());
-        }
       } else {
         emit(SuggestedFriendsFailureState(error: response['message']));
       }
@@ -105,10 +98,6 @@ class SuggestedFriendsBloc
 
         emit(SuggestedFriendsSuccessState(
             suggestedFriends: List.from(suggestedFriends)));
-
-        if (currentRequestCount == maxRequests) {
-          emit(MaxRequestsReachedState());
-        }
       } else {
         emit(SuggestedFriendsFailureState(error: response['message']));
       }
