@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/features/create%20account/blocs/sugges%20friends%20bloc/suggested_friends_bloc.dart';
 import 'package:flock/features/create%20account/repository/suggested_friends_repositoy.dart';
 import 'package:flock/features/home/screens/hom_screen.dart';
@@ -40,7 +39,6 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return BlocProvider(
       create: (context) => _suggestedFriendsBloc,
       child: Stack(
@@ -54,7 +52,10 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
               backgroundColor: Theme.of(context).colorScheme.background,
               actions: [
                 TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, HomeScreen.routeName, (route) => false);
+                    },
                     child: Text('Skip',
                         style: Theme.of(context).textTheme.bodyLarge))
               ],

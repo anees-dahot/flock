@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: themeMode,
             onGenerateRoute: generateRoute,
-            initialRoute: SuggestedFriends.routeName,
+            initialRoute: HomeScreen.routeName,
           );
         },
       ),
