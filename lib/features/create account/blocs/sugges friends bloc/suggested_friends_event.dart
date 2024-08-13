@@ -17,6 +17,14 @@ class SendFriendRequestEvent extends SuggestedFriendsEvent {
   List<Object> get props => [userId];
 }
 
+class DeleteFriendRequestEvent extends SuggestedFriendsEvent {
+  final String userId;
+
+  const DeleteFriendRequestEvent({required this.userId});
+  @override
+  List<Object> get props => [userId];
+}
+
 class CheckFriendRequestStatusEvent extends SuggestedFriendsEvent {
   final String userId;
 

@@ -19,6 +19,7 @@ class SuggestedFriendsBloc
       : super(SuggestedFriendsInitial()) {
     on<GetSuggestedFriendsEvent>(getSuggestedFriendsEvent);
     on<SendFriendRequestEvent>(sendFriendRequestEvent);
+    on<DeleteFriendRequestEvent>(deleteFriendRequestEvent);
     on<CheckFriendRequestStatusEvent>(checkFriendRequestStatus);
   }
 
@@ -51,6 +52,32 @@ class SuggestedFriendsBloc
 
       if (response['status'] == 200) {
         sentRequestIds.add(event.userId);
+        currentRequestCount = sentRequestIds.length;
+
+        emit(SuggestedFriendsSuccessState(
+            suggestedFriends: List.from(suggestedFriends)));
+
+        if (currentRequestCount == maxRequests) {
+          emit(MaxRequestsReachedState());
+        }
+      } else {
+        emit(SuggestedFriendsFailureState(error: response['message']));
+      }
+    } catch (e) {
+      emit(SuggestedFriendsFailureState(error: e.toString()));
+    }
+  }
+
+  Future<void> deleteFriendRequestEvent(DeleteFriendRequestEvent event,
+      Emitter<SuggestedFriendsState> emit) async {
+    emit(SendFriendRequestSuccessState());
+
+    try {
+      final response =
+          await suggestedFriendsRepository.deleteFriendRequest(event.userId);
+
+      if (response['status'] == 200) {
+        sentRequestIds.remove(event.userId);
         currentRequestCount = sentRequestIds.length;
 
         emit(SuggestedFriendsSuccessState(
