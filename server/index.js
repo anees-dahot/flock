@@ -1,10 +1,12 @@
 const express = require("express");
-const authrouter = require("./routes/auth");
+const accountRouter = require("./routes/auth");
+const authrouter = require("./routes/account");
 const mongoose = require("mongoose");
 const app = express();
-const PORT = 3000
+const PORT = 3000;
 app.use(express.json());
 app.use(authrouter);
+app.use(accountRouter);
 
 mongoose
   .connect(
