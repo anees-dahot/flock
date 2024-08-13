@@ -24,11 +24,12 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
     _suggestedFriendsBloc = SuggestedFriendsBloc(
         suggestedFriendsRepository: SuggestedFriendsRepository());
     _suggestedFriendsBloc.add(GetSuggestedFriendsEvent());
-    assignIt();
+
+    assignId();
     super.initState();
   }
 
-  void assignIt() async {
+  void assignId() async {
     await Storage().getUserData().then((value) {
       id = value!.id;
     });
@@ -54,12 +55,12 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
             SizedBox(height: height * 0.05),
             Text(
               'Suggested Friends',
-              style: Theme.of(context).textTheme.headlineMedium,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: 8),
             Text(
               'Add at least 5 friends to get started!',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 16),
             SizedBox(height: height * 0.05),
@@ -104,79 +105,91 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                                 child: ListTile(
-                                  leading: SizedBox(
-                                    width: 45,
-                                    height: 45,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: CachedNetworkImage(
-                                        imageUrl: data.profileImage,
-                                        fit: BoxFit.cover,
+                                    leading: SizedBox(
+                                      width: 45,
+                                      height: 45,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: CachedNetworkImage(
+                                          imageUrl: data.profileImage,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  title: Text(data.fullName),
-                                  trailing: BlocBuilder<SuggestedFriendsBloc,
-                                      SuggestedFriendsState>(
-                                    bloc: _suggestedFriendsBloc,
-                                    buildWhen: (previous, current) =>
-                                        current is FriendRequestState,
-                                    builder: (context, state) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          if (!isRequestSent) {
-                                            _suggestedFriendsBloc.add(
-                                                SendFriendRequestEvent(
-                                                    userId: data.id));
-                                          } else {}
-                                        },
-                                        child: Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.3,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.06,
-                                          decoration: BoxDecoration(
-                                            color: isRequestSent ||
-                                                    data.friendsRequests
-                                                        .contains(id)
-                                                ? Theme.of(context)
-                                                        .colorScheme
-                                                        .onBackground // Change color if request is sent or already requested
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              isRequestSent
-                                                  ? 'Requested'
-                                                  : data.friendsRequests
+                                    title: Text(data.fullName),
+                                    trailing: BlocBuilder<SuggestedFriendsBloc,
+                                        SuggestedFriendsState>(
+                                      bloc: _suggestedFriendsBloc,
+                                      buildWhen: (previous, current) {
+                                        return current
+                                                is FriendRequestStatusState ||
+                                            current
+                                                is SuggestedFriendsSuccessState;
+                                      },
+                                      builder: (context, state) {
+                                        bool isRequestSent =
+                                            _suggestedFriendsBloc.sentRequestIds
+                                                .contains(data.id);
+
+                                        return GestureDetector(
+                                          onTap: () {
+                                            if (!isRequestSent) {
+                                              _suggestedFriendsBloc.add(
+                                                  SendFriendRequestEvent(
+                                                      userId: data.id));
+                                            } else {
+                                              _suggestedFriendsBloc.add(
+                                                  DeleteFriendRequestEvent(
+                                                      userId: data.id));
+                                            }
+                                          },
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.3,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.06,
+                                            decoration: BoxDecoration(
+                                              color: isRequestSent ||
+                                                      data.friendsRequests
                                                           .contains(id)
-                                                      ? 'Requested' // Change text if already requested
-                                                      : 'Add Friend',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w500,
-                                                color: isRequestSent ||
+                                                  ? Theme.of(context)
+                                                      .colorScheme
+                                                      .onBackground
+                                                  : Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                isRequestSent ||
                                                         data.friendsRequests
                                                             .contains(id)
-                                                    ? Theme.of(context).colorScheme.background // Change texst color for both conditions
-                                                    : const Color.fromARGB(
-                                                        255, 29, 29, 29),
+                                                    ? 'Requested'
+                                                    : 'Add Friend',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: isRequestSent ||
+                                                          data.friendsRequests
+                                                              .contains(id)
+                                                      ? Theme.of(context)
+                                                          .colorScheme
+                                                          .background
+                                                      : const Color.fromARGB(
+                                                          255, 29, 29, 29),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                                        );
+                                      },
+                                    )),
                               ),
                             ),
                           );

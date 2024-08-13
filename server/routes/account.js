@@ -84,7 +84,7 @@ accountRouter.post(
 
       // Use $pull to remove the item from the array
       await User.findByIdAndUpdate(userId, {
-        $pull: { friendsRequests: req.user._id },
+        $pull: { friendsRequests: req.user },
       });
 
       // Fetch the updated user

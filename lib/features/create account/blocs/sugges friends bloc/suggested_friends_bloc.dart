@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flock/features/create%20account/repository/suggested_friends_repositoy.dart';
 import 'package:flock/models/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'suggested_friends_event.dart';
 part 'suggested_friends_state.dart';
@@ -14,6 +15,7 @@ class SuggestedFriendsBloc
   final SuggestedFriendsRepository suggestedFriendsRepository;
   final int maxRequests = 5;
   int currentRequestCount = 0;
+  late SharedPreferences _prefs;
 
   SuggestedFriendsBloc({required this.suggestedFriendsRepository})
       : super(SuggestedFriendsInitial()) {
@@ -21,6 +23,25 @@ class SuggestedFriendsBloc
     on<SendFriendRequestEvent>(sendFriendRequestEvent);
     on<DeleteFriendRequestEvent>(deleteFriendRequestEvent);
     on<CheckFriendRequestStatusEvent>(checkFriendRequestStatus);
+    _initSharedPreferences();
+  }
+
+  Future<void> _initSharedPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+    _loadSentRequestIds();
+    print(sentRequestIds);
+    print(sentRequestIds.length);
+    print('added');
+  }
+
+  void _loadSentRequestIds() {
+    sentRequestIds.clear();
+    sentRequestIds.addAll(_prefs.getStringList('sentRequestIds') ?? []);
+    currentRequestCount = sentRequestIds.length;
+  }
+
+  Future<void> _saveSentRequestIds() async {
+    await _prefs.setStringList('sentRequestIds', sentRequestIds);
   }
 
   Future<void> getSuggestedFriendsEvent(GetSuggestedFriendsEvent event,
@@ -53,6 +74,7 @@ class SuggestedFriendsBloc
       if (response['status'] == 200) {
         sentRequestIds.add(event.userId);
         currentRequestCount = sentRequestIds.length;
+        await _saveSentRequestIds();
 
         emit(SuggestedFriendsSuccessState(
             suggestedFriends: List.from(suggestedFriends)));
@@ -77,8 +99,9 @@ class SuggestedFriendsBloc
           await suggestedFriendsRepository.deleteFriendRequest(event.userId);
 
       if (response['status'] == 200) {
-        sentRequestIds.remove(event.userId);
+        sentRequestIds.removeWhere((element) => element == event.userId);
         currentRequestCount = sentRequestIds.length;
+        await _saveSentRequestIds();
 
         emit(SuggestedFriendsSuccessState(
             suggestedFriends: List.from(suggestedFriends)));
