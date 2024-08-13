@@ -72,6 +72,32 @@ accountRouter.post(
   }
 );
 
+//* Delete friends request
+accountRouter.post(
+  "/api/delete-friend-request/:userId",
+  auth,
+  async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const user = await User.findById(userId);
+      if (!user) return res.status(400).json({ msg: "User does not exist!" });
+
+      // Use $pull to remove the item from the array
+      await User.findByIdAndUpdate(userId, {
+        $pull: { friendsRequests: req.user._id },
+      });
+
+      // Fetch the updated user
+      const updatedUser = await User.findById(userId);
+
+      res.status(200).json(updatedUser);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+      console.log(e.message);
+    }
+  }
+);
+
 //* Check friends requests
 accountRouter.post(
   "/api/check-friend-requests/:userId",
