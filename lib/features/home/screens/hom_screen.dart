@@ -5,22 +5,21 @@ import 'package:flock/core/theme/theme_cubit.dart';
 import 'package:flock/features/login/screens/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  
-static const String routeName = 'home-screen';
+  static const String routeName = 'home-screen';
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  SuggestedFriendsRepository suggestedFriendsRepository = SuggestedFriendsRepository()
-;
+  SuggestedFriendsRepository suggestedFriendsRepository =
+      SuggestedFriendsRepository();
   @override
   void initState() {
-   suggestedFriendsRepository.getSuggestedFriends();
+    suggestedFriendsRepository.getSuggestedFriends();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               'Hello World',
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context).textTheme.headlineLarge,
             ),
             const SizedBox(height: 20),
             Divider(color: Theme.of(context).dividerColor, height: 12),
@@ -39,7 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginScreen()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const LoginScreen()));
               },
               child: const Text('Go to Login'),
             ),

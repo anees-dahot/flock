@@ -50,79 +50,97 @@ class SuggestedFriendsList extends StatelessWidget {
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: ListTile(
-                            leading: SizedBox(
-                              width: 45,
-                              height: 45,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: CachedNetworkImage(
-                                  imageUrl: data.profileImage,
-                                  fit: BoxFit.cover,
-                                ),
+                          leading: SizedBox(
+                            width: 45,
+                            height: 45,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: CachedNetworkImage(
+                                imageUrl: data.profileImage,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                            title: Text(data.fullName),
-                            trailing: BlocBuilder<SuggestedFriendsBloc,
-                                SuggestedFriendsState>(
-                              bloc: _suggestedFriendsBloc,
-                              buildWhen: (previous, current) {
-                                return current is FriendRequestStatusState ||
-                                    current is SuggestedFriendsSuccessState;
-                              },
-                              builder: (context, state) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    if (!isRequestSent) {
-                                      _suggestedFriendsBloc.add(
-                                          SendFriendRequestEvent(
-                                              userId: data.id));
-                                    } else {
-                                      _suggestedFriendsBloc.add(
-                                          DeleteFriendRequestEvent(
-                                              userId: data.id));
-                                    }
-                                  },
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.3,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.06,
-                                    decoration: BoxDecoration(
-                                      color: isRequestSent ||
+                          ),
+                          title: Text(data.fullName),
+                          trailing: BlocBuilder<SuggestedFriendsBloc,
+                              SuggestedFriendsState>(
+                            bloc: _suggestedFriendsBloc,
+                            buildWhen: (previous, current) {
+                              return current is FriendRequestStatusState ||
+                                  current is SuggestedFriendsSuccessState ||
+                                  current is SendFriendRequestLoadingState;
+                            },
+                            builder: (context, state) {
+                              if (state is SendFriendRequestLoadingState &&
+                                  state.userId == data.id) {
+                                return Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.055,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onBackground,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: const Center(
+                                      child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                  )),
+                                );
+                              }
+                              return GestureDetector(
+                                onTap: () {
+                                  if (!isRequestSent) {
+                                    _suggestedFriendsBloc.add(
+                                        SendFriendRequestEvent(
+                                            userId: data.id));
+                                  } else {
+                                    _suggestedFriendsBloc.add(
+                                        DeleteFriendRequestEvent(
+                                            userId: data.id));
+                                  }
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  height: MediaQuery.of(context).size.height *
+                                      0.055,
+                                  decoration: BoxDecoration(
+                                    color: isRequestSent ||
+                                            data.friendsRequests.contains(id)
+                                        ? Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                        : Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      isRequestSent ||
                                               data.friendsRequests.contains(id)
-                                          ? Theme.of(context)
-                                              .colorScheme
-                                              .onBackground
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        isRequestSent ||
+                                          ? 'Requested'
+                                          : 'Add Friend',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: isRequestSent ||
                                                 data.friendsRequests
                                                     .contains(id)
-                                            ? 'Requested'
-                                            : 'Add Friend',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500,
-                                          color: isRequestSent ||
-                                                  data.friendsRequests
-                                                      .contains(id)
-                                              ? Theme.of(context)
-                                                  .colorScheme
-                                                  .background
-                                              : const Color.fromARGB(
-                                                  255, 29, 29, 29),
-                                        ),
+                                            ? Theme.of(context)
+                                                .colorScheme
+                                                .background
+                                            : const Color.fromARGB(
+                                                255, 29, 29, 29),
                                       ),
                                     ),
                                   ),
-                                );
-                              },
-                            )),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   );

@@ -15,7 +15,7 @@ class SuggestedFriendsBloc
   final SuggestedFriendsRepository suggestedFriendsRepository;
   final int maxRequests = 5;
   int currentRequestCount = 0;
-  late SharedPreferences _prefs;
+  late SharedPreferences prefs;
 
   SuggestedFriendsBloc({required this.suggestedFriendsRepository})
       : super(SuggestedFriendsInitial()) {
@@ -27,18 +27,18 @@ class SuggestedFriendsBloc
   }
 
   Future<void> _initSharedPreferences() async {
-    _prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     _loadSentRequestIds();
   }
 
   void _loadSentRequestIds() {
     sentRequestIds.clear();
-    sentRequestIds.addAll(_prefs.getStringList('sentRequestIds') ?? []);
+    sentRequestIds.addAll(prefs.getStringList('sentRequestIds') ?? []);
     currentRequestCount = sentRequestIds.length;
   }
 
   Future<void> _saveSentRequestIds() async {
-    await _prefs.setStringList('sentRequestIds', sentRequestIds);
+    await prefs.setStringList('sentRequestIds', sentRequestIds);
   }
 
   Future<void> getSuggestedFriendsEvent(GetSuggestedFriendsEvent event,
@@ -62,7 +62,7 @@ class SuggestedFriendsBloc
 
   Future<void> sendFriendRequestEvent(
       SendFriendRequestEvent event, Emitter<SuggestedFriendsState> emit) async {
-    emit(SendFriendRequestSuccessState());
+    emit(SendFriendRequestLoadingState(userId: event.userId));
 
     try {
       final response =
@@ -85,7 +85,7 @@ class SuggestedFriendsBloc
 
   Future<void> deleteFriendRequestEvent(DeleteFriendRequestEvent event,
       Emitter<SuggestedFriendsState> emit) async {
-    emit(SendFriendRequestSuccessState());
+    emit(SendFriendRequestLoadingState(userId: event.userId));
 
     try {
       final response =

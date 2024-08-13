@@ -47,4 +47,8 @@ class SendFriendRequestFailureState extends FriendRequestState {
   List<Object> get props => [error];
 }
 
-class SendFriendRequestLoadingState extends FriendRequestState {}
+class SendFriendRequestLoadingState extends FriendRequestState {
+  final String userId;
+
+  SendFriendRequestLoadingState({required this.userId});
+}

@@ -83,8 +83,12 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                       right: 16,
                       child: FloatingActionButton(
                         onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, HomeScreen.routeName, (route) => false);
+                          _suggestedFriendsBloc.prefs
+                              .remove('sentRequestIds')
+                              .then((value) {
+                            Navigator.pushNamedAndRemoveUntil(context,
+                                HomeScreen.routeName, (route) => false);
+                          });
                         },
                         child: const Icon(Icons.arrow_forward),
                       ),
