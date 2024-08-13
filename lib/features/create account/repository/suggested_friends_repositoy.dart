@@ -57,6 +57,27 @@ class SuggestedFriendsRepository {
     }
   }
 
+  Future<Map<String, dynamic>> deleteFriendRequest(String userId) async {
+    String? token = await Storage().getData('token') as String;
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/delete-friend-request/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token,
+      },
+    );
+
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return {'status': 200, 'message': 'Request deleted.'};
+    } else if (response.statusCode == 400) {
+      return {'status': 400, 'message': responseBody['msg']};
+    } else {
+      return {'status': response.statusCode, 'message': responseBody['error']};
+    }
+  }
+
   Future<Map<String, dynamic>> checkFriendRequestStatus(String userId) async {
     String? token = await Storage().getData('token') as String;
     final response = await http.post(
