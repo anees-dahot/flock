@@ -1,6 +1,6 @@
 import 'package:flock/features/create%20account/blocs/sugges%20friends%20bloc/suggested_friends_bloc.dart';
 import 'package:flock/features/create%20account/repository/suggested_friends_repositoy.dart';
-import 'package:flock/features/home/screens/hom_screen.dart';
+import 'package:flock/features/tabbars/screens/tab_screen.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,7 +54,7 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                 TextButton(
                     onPressed: () {
                       Navigator.pushNamedAndRemoveUntil(
-                          context, HomeScreen.routeName, (route) => false);
+                          context, TabScreen.routeName, (route) => false);
                     },
                     child: Text('Skip',
                         style: Theme.of(context).textTheme.bodyLarge))
@@ -88,7 +88,7 @@ class _SuggestedFriendsState extends State<SuggestedFriends> {
                               .remove('sentRequestIds')
                               .then((value) {
                             Navigator.pushNamedAndRemoveUntil(context,
-                                HomeScreen.routeName, (route) => false);
+                                TabScreen.routeName, (route) => false);
                           });
                         },
                         child: const Icon(Icons.arrow_forward),

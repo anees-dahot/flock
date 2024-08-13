@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/theme/theme.dart';
-import 'features/home/screens/hom_screen.dart';
+import 'features/tabbars/screens/tab_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: themeMode,
             onGenerateRoute: generateRoute,
-            initialRoute: HomeScreen.routeName,
+            initialRoute: TabScreen.routeName,
           );
         },
       ),
