@@ -72,6 +72,20 @@ accountRouter.post(
   }
 );
 
+//* Get friends request
+accountRouter.get("/api/get-friend-request", auth, async (req, res) => {
+  try {
+    const userId = req.user;
+    const user = await User.findById(userId).populate("friendsRequests");
+    if (!user) return res.status(400).json({ msg: "User does not exist!" });
+
+    res.status(200).json(user.friendsRequests);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+    console.log(e.message);
+  }
+});
+
 //* Delete friends request
 accountRouter.post(
   "/api/delete-friend-request/:userId",
@@ -98,7 +112,7 @@ accountRouter.post(
   }
 );
 
-//* Check friends requests
+//* Check friends requests status
 accountRouter.post(
   "/api/check-friend-requests/:userId",
   auth,
