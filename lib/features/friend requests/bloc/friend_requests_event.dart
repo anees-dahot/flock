@@ -9,4 +9,4 @@ sealed class FriendRequestsEvent extends Equatable {
 
 
 
-class GetFriendRequests extends FriendRequestsEvent{}
+class GetFriendRequestsEvent extends FriendRequestsEvent{}

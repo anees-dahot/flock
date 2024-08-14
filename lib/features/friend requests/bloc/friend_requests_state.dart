@@ -19,10 +19,10 @@ class GetFriendRequestsSuccessState extends FriendRequestsState {
   List<Object> get props => [friendRequests];
 }
 
-class GetFriendRequestsStateState extends FriendRequestsState {
+class GetFriendRequestsFailureState extends FriendRequestsState {
   final String error;
 
-  const GetFriendRequestsStateState({required this.error});
+  const GetFriendRequestsFailureState({required this.error});
   @override
   List<Object> get props => [error];
 }
