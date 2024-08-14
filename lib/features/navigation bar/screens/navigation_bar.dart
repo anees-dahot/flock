@@ -24,6 +24,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

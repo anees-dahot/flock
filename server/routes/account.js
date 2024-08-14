@@ -73,7 +73,7 @@ accountRouter.post(
 );
 
 //* Get friends request
-accountRouter.get("/api/get-friend-request", auth, async (req, res) => {
+accountRouter.get("/api/get-friend-requests", auth, async (req, res) => {
   try {
     const userId = req.user;
     const user = await User.findById(userId).populate("friendsRequests");
