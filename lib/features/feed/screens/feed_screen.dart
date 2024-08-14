@@ -58,10 +58,68 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                 ),
+                
               ],
             ),
           ),
-        
+        Expanded(
+  child: ListView.builder(
+    itemCount: 10,
+    itemBuilder: (context, index) {
+      return Card(
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        elevation: 2,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage('https://picsum.photos/100?random=$index'),
+              ),
+              title: Text('User $index', style: const TextStyle(fontWeight: FontWeight.bold)),
+              subtitle: const Text('2 hours ago'),
+              trailing: IconButton(
+                icon: const Icon(CupertinoIcons.ellipsis),
+                onPressed: () {
+                  // Add your onPressed logic here
+                },
+              ),
+            ),
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(15)),
+              child: Image.network(
+                'https://picsum.photos/400/300?random=$index',
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(CupertinoIcons.heart, color: Theme.of(context).colorScheme.onBackground),
+                      const SizedBox(width: 4),
+                      Text('1.2k', style: TextStyle(color: Theme.of(context).colorScheme.onBackground)),
+                      const SizedBox(width: 16),
+                      Icon(CupertinoIcons.chat_bubble, color: Theme.of(context).colorScheme.onBackground),
+                      const SizedBox(width: 4),
+                      Text('84', style: TextStyle(color: Theme.of(context).colorScheme.onBackground)),
+                    ],
+                  ),
+                  Icon(CupertinoIcons.share, color: Theme.of(context).colorScheme.primary),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  ),
+)
+
         ],
       ),
     
