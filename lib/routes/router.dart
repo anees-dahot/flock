@@ -1,18 +1,18 @@
 import 'package:flock/features/create%20account/screens/create_account.dart';
 import 'package:flock/features/create%20account/screens/pick_profile_image.dart';
 import 'package:flock/features/create%20account/screens/suggested_friends.dart';
-import 'package:flock/features/tabbars/screens/tab_screen.dart';
 import 'package:flock/features/login/screens/login_screen.dart';
 import 'package:flock/features/search/screens/search_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../features/create account/screens/pick_profile_cover.dart';
 import '../features/register account/screens/register_account_screen.dart';
+import '../features/navigation bar/screens/navigation_bar.dart';
 
 Route generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
-    case TabScreen.routeName:
-      return MaterialPageRoute(builder: (_) => TabScreen());
+    case NavigationBarScreen.routeName:
+      return MaterialPageRoute(builder: (_) => NavigationBarScreen());
     case LoginScreen.routeName:
       return MaterialPageRoute(builder: (_) => LoginScreen());
     case RegisterScreen.routeName:

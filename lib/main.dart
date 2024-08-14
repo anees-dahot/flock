@@ -1,11 +1,10 @@
 import 'package:flock/core/theme/theme_cubit.dart';
-import 'package:flock/features/create%20account/screens/suggested_friends.dart';
 import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/theme/theme.dart';
-import 'features/tabbars/screens/tab_screen.dart';
+import 'features/navigation bar/screens/navigation_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,9 +32,9 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: lightTheme,
             darkTheme: darkTheme,
-            themeMode: themeMode,
+            themeMode: ThemeMode.dark,
             onGenerateRoute: generateRoute,
-            initialRoute: TabScreen.routeName,
+            initialRoute: NavigationBarScreen.routeName,
           );
         },
       ),
