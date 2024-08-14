@@ -80,6 +80,7 @@ accountRouter.get("/api/get-friend-requests", auth, async (req, res) => {
     if (!user) return res.status(400).json({ msg: "User does not exist!" });
 
     res.status(200).json(user.friendsRequests);
+    console.log(user.friendsRequests)
   } catch (e) {
     res.status(500).json({ error: e.message });
     console.log(e.message);

@@ -8,6 +8,7 @@ class FriendRequests extends StatefulWidget {
 }
 
 class _FriendRequestsState extends State<FriendRequests> {
+ 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

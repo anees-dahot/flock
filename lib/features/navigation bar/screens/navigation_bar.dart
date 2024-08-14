@@ -23,7 +23,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
       _selectedIndex = page;
     });
   }
-
+  
 
   @override
   Widget build(BuildContext context) {
