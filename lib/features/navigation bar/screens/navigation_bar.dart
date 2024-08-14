@@ -1,4 +1,5 @@
 import 'package:flock/features/feed/screens/feed_screen.dart';
+import 'package:flock/features/friend%20requests/screens/friend_requests_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationBarScreen extends StatefulWidget {
@@ -13,7 +14,7 @@ class _NavigationBarScreenState extends State<NavigationBarScreen> {
   int _selectedIndex = 0;
   final List<Widget> pages = [
     HomePage(),
-    HomePage(),
+    FriendRequests(),
     HomePage(),
   ];
 
