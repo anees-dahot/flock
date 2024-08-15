@@ -13,10 +13,16 @@ class HomePage extends StatelessWidget {
         title:
             const Text('Flock', style: TextStyle(fontWeight: FontWeight.bold)),
         actions: [
-          IconButton(icon: const Icon(CupertinoIcons.search), onPressed: () {}),
-          IconButton(icon: const Icon(CupertinoIcons.bell), onPressed: () {}),
+          IconButton(
+              icon: const Icon(CupertinoIcons.search),
+              onPressed: ()  async{
+                
+              }),
+          IconButton(
+              icon: const Icon(CupertinoIcons.bell),
+              onPressed: () {}), // Removed extra semicolon
         ],
-       backgroundColor: Theme.of(context).colorScheme.background, 
+        backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body: Column(
         children: [

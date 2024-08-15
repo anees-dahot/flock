@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flock/models/user.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../utils/app_urls.dart';
@@ -18,6 +19,9 @@ class LoginRepository {
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      UserModel user = UserModel.fromJson(json.decode(response.body)['user']);
+
+      await Storage().saveUserData(user);
       final token = responseBody['token'] as String?;
       if (token != null) {
         await Storage().saveDate('token', token);

@@ -2,7 +2,9 @@ import 'package:flock/core/widgets/text_fields.dart';
 import 'package:flock/features/create%20account/screens/pick_profile_image.dart';
 import 'package:flock/features/login/bloc/login_bloc.dart';
 import 'package:flock/features/login/repositories/login_repository.dart';
+import 'package:flock/features/navigation%20bar/screens/navigation_bar.dart';
 import 'package:flock/features/register%20account/screens/register_account_screen.dart';
+import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +20,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   late LoginBloc _loginBloc;
   @override
   void initState() {
@@ -28,7 +30,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-   
     TextEditingController email = TextEditingController();
     TextEditingController password = TextEditingController();
     final height = MediaQuery.of(context).size.height;
@@ -103,9 +104,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     } else if (state is LoginSuccessState) {
                       NotificationHelper.showSuccessNotification(
                           context, state.message);
-                      Future.delayed(const Duration(seconds: 1), () {
-                        Navigator.pushNamed(
-                            context, PickProfileImage.routeName);
+                      Future.delayed(const Duration(seconds: 1), () async {
+                        await Storage().getUserData().then((value) {
+                          if (value == null) {
+                            Navigator.pushNamed(
+                                context, PickProfileImage.routeName);
+                          } else {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                NavigationBarScreen.routeName,
+                                (route) => false);
+                          }
+                        });
                       });
                     }
                   },
