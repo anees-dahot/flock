@@ -23,12 +23,34 @@ class FriendRequestsRepository {
       final List<dynamic> data = responseBody;
       final List<UserModel> friendRequests =
           data.map((userJson) => UserModel.fromJson(userJson)).toList();
-      print(friendRequests);
-      print(friendRequests[0].fullName);
       return {
         'status': 200,
         'message': 'Logged in successfully',
         'data': friendRequests
+      };
+    } else if (response.statusCode == 400) {
+      return {'status': 400, 'message': responseBody['msg']};
+    } else {
+      return {'status': response.statusCode, 'message': responseBody['error']};
+    }
+  }
+
+  Future<Map<String, dynamic>> acceptFriendRequests(String userId) async {
+    String? token = await Storage().getData('token') as String;
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/accept-friend-requests/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token,
+      },
+    );
+
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      return {
+        'status': 200,
+        'message': responseBody['message'],
       };
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': responseBody['msg']};
