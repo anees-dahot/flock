@@ -18,11 +18,6 @@ class CreateAccountRepository {
       DateTime dateOfBirth) async {
     String? token = await Storage().getData('token') as String;
 
-    // Check if the token is null
-    if (token == null) {
-      return {'status': 401, 'message': 'Unauthorized: Token is null'};
-    }
-
     final cloudinary = CloudinaryPublic('doaewaso1', 'one9vigp');
     String image = '';
     String cover = '';

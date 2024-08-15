@@ -12,15 +12,15 @@ import '../features/navigation bar/screens/navigation_bar.dart';
 Route generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
     case NavigationBarScreen.routeName:
-      return MaterialPageRoute(builder: (_) => NavigationBarScreen());
+      return MaterialPageRoute(builder: (_) => const NavigationBarScreen());
     case LoginScreen.routeName:
-      return MaterialPageRoute(builder: (_) => LoginScreen());
+      return MaterialPageRoute(builder: (_) => const LoginScreen());
     case RegisterScreen.routeName:
-      return MaterialPageRoute(builder: (_) => RegisterScreen());
+      return MaterialPageRoute(builder: (_) => const RegisterScreen());
     case PickProfileImage.routeName:
-      return MaterialPageRoute(builder: (_) => PickProfileImage());
+      return MaterialPageRoute(builder: (_) => const PickProfileImage());
     case SuggestedFriends.routeName:
-      return MaterialPageRoute(builder: (_) => SuggestedFriends());
+      return MaterialPageRoute(builder: (_) => const SuggestedFriends());
     case SearchScreen.routeName:
       final bool autoFocus = routeSettings.arguments as bool;
       return MaterialPageRoute(
@@ -44,7 +44,7 @@ Route generateRoute(RouteSettings routeSettings) {
     default:
       return MaterialPageRoute(
         builder: (context) {
-          return Scaffold(
+          return const Scaffold(
             body: Center(
               child: Text('No screen found.'),
             ),

@@ -78,9 +78,11 @@ accountRouter.get("/api/get-friend-requests", auth, async (req, res) => {
     const userId = req.user;
     const user = await User.findById(userId).populate("friendsRequests");
     if (!user) return res.status(400).json({ msg: "User does not exist!" });
-
-    res.status(200).json(user.friendsRequests);
-    console.log(user.friendsRequests)
+    const friendsRequests = user.friendsRequests;
+    if (friendsRequests.length === 0)
+      return res.status(400).json({ msg: "No friend requests." });
+    res.status(200).json(friendsRequests);
+    console.log(user.friendsRequests);
   } catch (e) {
     res.status(500).json({ error: e.message });
     console.log(e.message);

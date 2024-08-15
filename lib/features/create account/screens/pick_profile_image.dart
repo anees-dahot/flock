@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flock/core/widgets/custom_button.dart';
 import 'package:flock/features/create%20account/blocs/image%20picker%20bloc/image_picker_bloc.dart';
-import 'package:flock/features/create%20account/screens/create_account.dart';
 import 'package:flock/features/create%20account/screens/pick_profile_cover.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

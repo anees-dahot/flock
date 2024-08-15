@@ -13,9 +13,9 @@ class NavigationBarScreen extends StatefulWidget {
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
   int _selectedIndex = 0;
   final List<Widget> pages = [
-    HomePage(),
-    FriendRequests(),
-    HomePage(),
+    const HomePage(),
+    const FriendRequests(),
+    const HomePage(),
   ];
 
   void updatePage(int page) {

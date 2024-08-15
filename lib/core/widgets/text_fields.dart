@@ -9,14 +9,14 @@ class CustomTextField extends StatefulWidget {
   final bool isPassword;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.validator,
     required this.hintText,
     this.fillColor,
     this.inputType = TextInputType.text,
     this.isPassword = false,
-  }) : super(key: key);
+  });
 
   @override
   _CustomTextFieldState createState() => _CustomTextFieldState();

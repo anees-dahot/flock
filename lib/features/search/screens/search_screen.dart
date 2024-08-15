@@ -4,7 +4,7 @@ class SearchScreen extends StatefulWidget {
   static const String routeName = 'search-screen';
   final bool autoFocus;
 
-  const SearchScreen({Key? key, this.autoFocus = false}) : super(key: key);
+  const SearchScreen({super.key, this.autoFocus = false});
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -39,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search'),
+        title: const Text('Search'),
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
       body: Padding(
