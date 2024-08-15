@@ -89,6 +89,32 @@ accountRouter.get("/api/get-friend-requests", auth, async (req, res) => {
   }
 });
 
+//* Accept friends request
+accountRouter.post(
+  "/api/accept-friend-requests/:userId",
+  auth,
+  async (req, res) => {
+    try {
+      const userId = req.user;
+      const requestUserId = req.params.userId;
+      const user = await User.findById(userId);
+      const requestUser = await User.findById(requestUserId);
+      if (!user) return res.status(400).json({ msg: "User does not exist!" });
+      user.friends.push(requestUserId);
+      await User.findByIdAndUpdate(userId, {
+        $pull: { friendsRequests: requestUserId },
+      });
+      await user.save();
+      requestUser.friends.push(userId);
+      await requestUser.save();
+      res.status(200).json({ message: "Request accepted!" });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+      console.log(e.message);
+    }
+  }
+);
+
 //* Delete friends request
 accountRouter.post(
   "/api/delete-friend-request/:userId",
