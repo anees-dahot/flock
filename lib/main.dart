@@ -1,10 +1,10 @@
 import 'package:flock/core/theme/theme_cubit.dart';
+import 'package:flock/features/splash%20screen/screens/splash_screen.dart';
 import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/theme/theme.dart';
-import 'features/navigation bar/screens/navigation_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
             darkTheme: darkTheme,
             themeMode: ThemeMode.light,
             onGenerateRoute: generateRoute,
-            initialRoute: NavigationBarScreen.routeName,
+            // initialRoute: NavigationBarScreen.routeName,
+            home: SplashScreen(),
           );
         },
       ),

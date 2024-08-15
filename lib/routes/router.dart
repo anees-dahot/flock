@@ -19,6 +19,8 @@ Route generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(builder: (_) => const RegisterScreen());
     case PickProfileImage.routeName:
       return MaterialPageRoute(builder: (_) => const PickProfileImage());
+    case NavigationBarScreen.routeName:
+      return MaterialPageRoute(builder: (_) => const NavigationBarScreen());
     case SuggestedFriends.routeName:
       return MaterialPageRoute(builder: (_) => const SuggestedFriends());
     case SearchScreen.routeName:
