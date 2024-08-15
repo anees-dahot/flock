@@ -52,6 +52,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                 child: ListView.builder(
                     itemCount: state.friendRequests.length,
                     itemBuilder: (context, index) {
+                      final requests = state.friendRequests[index];
                       return Container(
                         width: size.width * 0.9,
                         padding: const EdgeInsets.all(10.0),
@@ -64,10 +65,10 @@ class _FriendRequestsState extends State<FriendRequests> {
                           children: [
                             Row(
                               children: [
-                                const CircleAvatar(
+                                 CircleAvatar(
                                   radius: 20,
                                   backgroundImage:
-                                      NetworkImage('https://picsum.photos/100'),
+                                      NetworkImage(requests.profileImage),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
@@ -76,7 +77,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'John Doe',
+                                        requests.fullName,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge
@@ -84,19 +85,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                                               fontWeight: FontWeight.bold,
                                             ),
                                       ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '5 mutual friends',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall
-                                            ?.copyWith(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onBackground
-                                                  .withOpacity(0.6),
-                                            ),
-                                      ),
+                                     
                                     ],
                                   ),
                                 ),
@@ -104,7 +93,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                             ),
                             const SizedBox(height: 10),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 ElevatedButton(
                                   onPressed: () {},

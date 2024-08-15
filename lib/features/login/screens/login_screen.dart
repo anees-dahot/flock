@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     } else if (state is LoginSuccessState) {
                       NotificationHelper.showSuccessNotification(
                           context, state.message);
-                      Future.delayed(const Duration(seconds: 1), () async {
+                      Future.delayed(const Duration(seconds: 2), () async {
                         await Storage().getUserData().then((value) {
                           if (value == null) {
                             Navigator.pushNamed(
