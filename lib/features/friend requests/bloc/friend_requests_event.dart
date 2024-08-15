@@ -7,6 +7,12 @@ sealed class FriendRequestsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class GetFriendRequestsEvent extends FriendRequestsEvent {}
 
+class AcceptFriendRequestsEvent extends FriendRequestsEvent {
+  final String userId;
 
-class GetFriendRequestsEvent extends FriendRequestsEvent{}
+ const AcceptFriendRequestsEvent({required this.userId});
+    @override
+  List<Object> get props => [userId];
+}
