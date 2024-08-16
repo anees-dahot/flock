@@ -62,4 +62,32 @@ class FriendRequestsRepository {
       return {'status': response.statusCode, 'message': responseBody['error']};
     }
   }
+
+  Future<Map<String, dynamic>> deleteFriendRequests(String userId) async {
+    String? token = await Storage().getData('token') as String;
+    final response = await http.post(
+      Uri.parse('$baseUrl/api/delete-friend-request/$userId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'x-auth-token': token,
+      },
+    );
+
+    final responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = responseBody['friendRequests'];
+      final List<UserModel> friendRequests =
+          data.map((userJson) => UserModel.fromJson(userJson)).toList();
+      return {
+        'status': 200,
+        'message': 'Request deleted successfuly',
+        'data': friendRequests
+      };
+    } else if (response.statusCode == 400) {
+      return {'status': 400, 'message': responseBody['msg']};
+    } else {
+      return {'status': response.statusCode, 'message': responseBody['error']};
+    }
+  }
 }
