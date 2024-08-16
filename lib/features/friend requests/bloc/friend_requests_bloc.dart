@@ -16,6 +16,7 @@ class FriendRequestsBloc
       : super(FriendRequestsInitial()) {
     on<GetFriendRequestsEvent>(getFriendRequestsEvent);
     on<AcceptFriendRequestsEvent>(acceptFriendRequestsEvent);
+    on<DeleteFriendRequestsEvent>(deleteFriendRequestsEvent);
   }
 
   FutureOr<void> getFriendRequestsEvent(
@@ -54,6 +55,26 @@ class FriendRequestsBloc
       }
     } catch (e) {
       emit(AcceptFriendRequestsFailureState(error: e.toString()));
+    }
+  }
+
+  FutureOr<void> deleteFriendRequestsEvent(DeleteFriendRequestsEvent event,
+      Emitter<FriendRequestsState> emit) async {
+    try {
+      final response =
+          await friendRequestsRepository.deleteFriendRequests(event.userId);
+      if (response['status'] == 200) {
+        emit(DeleteFriendRequestsSuccessState(message: response['message']));
+        emit(GetFriendRequestsSuccessState(friendRequests: response['data']));
+      } else if (response['status'] == 400) {
+        emit(DeleteFriendRequestsFailureState(error: response['message']));
+      } else if (response['status'] == 500) {
+        emit(DeleteFriendRequestsFailureState(error: response['message']));
+      } else {
+        emit(DeleteFriendRequestsFailureState(error: response['message']));
+      }
+    } catch (e) {
+      emit(DeleteFriendRequestsFailureState(error: e.toString()));
     }
   }
 }
