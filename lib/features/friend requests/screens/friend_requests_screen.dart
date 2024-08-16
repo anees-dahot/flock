@@ -45,6 +45,11 @@ class _FriendRequestsState extends State<FriendRequests> {
                   context, state.message);
             } else if (state is AcceptFriendRequestsFailureState) {
               NotificationHelper.showErrorNotification(context, state.error);
+            } else if (state is DeleteFriendRequestsSuccessState) {
+              NotificationHelper.showSuccessNotification(
+                  context, state.message);
+            } else if (state is DeleteFriendRequestsFailureState) {
+              NotificationHelper.showErrorNotification(context, state.error);
             }
           },
           bloc: _friendRequestsBloc,
@@ -135,7 +140,11 @@ class _FriendRequestsState extends State<FriendRequests> {
                                     width: 30,
                                   ),
                                   OutlinedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      _friendRequestsBloc.add(
+                                          DeleteFriendRequestsEvent(
+                                              userId: requests.id));
+                                    },
                                     style: OutlinedButton.styleFrom(
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),

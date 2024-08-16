@@ -129,18 +129,19 @@ accountRouter.post(
   auth,
   async (req, res) => {
     try {
-      const { userId } = req.params;
-      const user = await User.findById(userId);
-      if (!user) return res.status(400).json({ msg: "User does not exist!" });
-      await User.findByIdAndUpdate(userId, {
-        $pull: { friendsRequests: req.user },
+      const userId = req.params.userId;
+      const myUser = req.user;
+      await User.findByIdAndUpdate(myUser, {
+        $pull: { friendsRequests: userId },
       });
-      const updatedUser = await User.findById(userId).populate(
+
+      const updatedUser = await User.findById(myUser).populate(
         "friendsRequests"
       );
       const requests = updatedUser.friendsRequests;
 
-      res.status(200).json({ friendRequest: requests });
+      res.status(200).json({ requests });
+      console.log(requests);
     } catch (e) {
       res.status(500).json({ error: e.message });
       console.log(e.message);

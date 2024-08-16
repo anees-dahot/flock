@@ -74,6 +74,7 @@ class FriendRequestsBloc
         emit(DeleteFriendRequestsFailureState(error: response['message']));
       }
     } catch (e) {
+      print(e.toString());
       emit(DeleteFriendRequestsFailureState(error: e.toString()));
     }
   }
