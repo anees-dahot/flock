@@ -97,7 +97,7 @@ accountRouter.post(
     try {
       const userId = req.user;
       const requestUserId = req.params.userId;
-      const user = await User.findById(userId)
+      const user = await User.findById(userId);
       const requestUser = await User.findById(requestUserId);
       if (!user) return res.status(400).json({ msg: "User does not exist!" });
       user.friends.push(requestUserId);
@@ -107,11 +107,15 @@ accountRouter.post(
       await user.save();
       requestUser.friends.push(userId);
       await requestUser.save();
-      const userWithRequests = await User.findById(userId).populate("friendsRequests");
-      const requests = userWithRequests.friendsRequests; 
+      const userWithRequests = await User.findById(userId).populate(
+        "friendsRequests"
+      );
+      const requests = userWithRequests.friendsRequests;
 
-      res.status(200).json({ message: "Request accepted!", friendRequests: requests });
-      console.log(requests)
+      res
+        .status(200)
+        .json({ message: "Request accepted!", friendRequests: requests });
+      console.log(requests);
     } catch (e) {
       res.status(500).json({ error: e.message });
       console.log(e.message);
@@ -131,9 +135,12 @@ accountRouter.post(
       await User.findByIdAndUpdate(userId, {
         $pull: { friendsRequests: req.user },
       });
-      const updatedUser = await User.findById(userId);
+      const updatedUser = await User.findById(userId).populate(
+        "friendsRequests"
+      );
+      const requests = updatedUser.friendsRequests;
 
-      res.status(200).json(updatedUser);
+      res.status(200).json({ friendRequest: requests });
     } catch (e) {
       res.status(500).json({ error: e.message });
       console.log(e.message);
