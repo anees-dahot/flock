@@ -44,3 +44,19 @@ class AcceptFriendRequestsFailureState extends FriendRequestActionState {
   @override
   List<Object> get props => [error];
 }
+
+class DeleteFriendRequestsSuccessState extends FriendRequestActionState {
+  final String message;
+
+  DeleteFriendRequestsSuccessState({required this.message});
+  @override
+  List<Object> get props => [message];
+}
+
+class DeleteFriendRequestsFailureState extends FriendRequestActionState {
+  final String error;
+
+  DeleteFriendRequestsFailureState({required this.error});
+  @override
+  List<Object> get props => [error];
+}

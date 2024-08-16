@@ -12,7 +12,15 @@ class GetFriendRequestsEvent extends FriendRequestsEvent {}
 class AcceptFriendRequestsEvent extends FriendRequestsEvent {
   final String userId;
 
- const AcceptFriendRequestsEvent({required this.userId});
-    @override
+  const AcceptFriendRequestsEvent({required this.userId});
+  @override
+  List<Object> get props => [userId];
+}
+
+class DeleteFriendRequestsEvent extends FriendRequestsEvent {
+  final String userId;
+
+  const DeleteFriendRequestsEvent({required this.userId});
+  @override
   List<Object> get props => [userId];
 }
