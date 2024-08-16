@@ -48,9 +48,13 @@ class FriendRequestsRepository {
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
+      final List<dynamic> data = responseBody['friendRequests'];
+      final List<UserModel> friendRequests =
+          data.map((userJson) => UserModel.fromJson(userJson)).toList();
       return {
         'status': 200,
         'message': responseBody['message'],
+        'data': friendRequests
       };
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': responseBody['msg']};
