@@ -43,16 +43,8 @@ class FriendRequestsBloc
       final response =
           await friendRequestsRepository.acceptFriendRequests(event.userId);
       if (response['status'] == 200) {
-        final friendRequestsResponse =
-            await friendRequestsRepository.getFriendRequests();
-        if (friendRequestsResponse['status'] == 200) {
-          emit(GetFriendRequestsSuccessState(
-              friendRequests: friendRequestsResponse['data']));
-        } else {
-          emit(GetFriendRequestsFailureState(
-              error: friendRequestsResponse['message']));
-        }
         emit(AccpetFriendRequestsSuccessState(message: response['message']));
+        emit(GetFriendRequestsSuccessState(friendRequests: response['data']));
       } else if (response['status'] == 400) {
         emit(AcceptFriendRequestsFailureState(error: response['message']));
       } else if (response['status'] == 500) {
