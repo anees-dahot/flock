@@ -97,7 +97,7 @@ accountRouter.post(
     try {
       const userId = req.user;
       const requestUserId = req.params.userId;
-      const user = await User.findById(userId);
+      const user = await User.findById(userId).populate("friendsRequests"); // Populate friend requests
       const requestUser = await User.findById(requestUserId);
       if (!user) return res.status(400).json({ msg: "User does not exist!" });
       user.friends.push(requestUserId);
@@ -107,7 +107,9 @@ accountRouter.post(
       await user.save();
       requestUser.friends.push(userId);
       await requestUser.save();
-      res.status(200).json({ message: "Request accepted!" });
+      const requests = user.friendsRequests; // Now this contains full user data
+
+      res.status(200).json({ message: "Request accepted!", friendsRequests: requests });
     } catch (e) {
       res.status(500).json({ error: e.message });
       console.log(e.message);
