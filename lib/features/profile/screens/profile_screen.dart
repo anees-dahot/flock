@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/models/user.dart';
 import 'package:flock/utils/storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -128,8 +129,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     widget.user.bio,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                 
-                  
+                  SizedBox(
+                    height: size.height * 0.02,
+                  ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: size.width * 0.4,
+                          height: size.height * 0.055,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.background,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                             widget.user.id == id ? Icon(CupertinoIcons.pencil) : widget.user.friends.contains(id)
+                                  ? const Icon(Icons.group, color: Colors.white)
+                                  : const Icon(Icons.person_add_alt,
+                                      color: Colors.white), // Added icon
+                              const SizedBox(width: 8),
+                              Text(
+                                 widget.user.id == id ? 'Add to story' : widget.user.friends.contains(id)
+                                    ? 'Friends'
+                                    : 'Send request',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 30),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Container(
+                          width: size.width * 0.4,
+                          height: size.height * 0.055,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                             const Icon(Icons.message, color: Colors.white),
+                              const SizedBox(width: 8),
+                              Text(
+                                'Message',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .copyWith(
+                                      color: Colors.white,
+                                    ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
