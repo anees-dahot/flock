@@ -40,7 +40,7 @@ class FriendRequestsBloc
 
   FutureOr<void> acceptFriendRequestsEvent(AcceptFriendRequestsEvent event,
       Emitter<FriendRequestsState> emit) async {
-    try {
+       try {
       final response =
           await friendRequestsRepository.acceptFriendRequests(event.userId);
       if (response['status'] == 200) {
@@ -60,7 +60,7 @@ class FriendRequestsBloc
 
   FutureOr<void> deleteFriendRequestsEvent(DeleteFriendRequestsEvent event,
       Emitter<FriendRequestsState> emit) async {
-    try {
+      try {
       final response =
           await friendRequestsRepository.deleteFriendRequests(event.userId);
       if (response['status'] == 200) {
