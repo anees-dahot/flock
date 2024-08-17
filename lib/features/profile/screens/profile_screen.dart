@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/models/user.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = 'profile-screen';
@@ -13,6 +12,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String? id;
+
+  @override
+  void initState() {
+    super.initState();
+    getId();
+  }
+
+  void getId() async {
+    await Storage().getUserData().then((value) {
+      setState(() {
+        id = value!.id;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -25,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               clipBehavior: Clip.none,
               alignment: Alignment.bottomLeft,
               children: [
-                Container(
+                SizedBox(
                   width: size.width,
                   height: size.height * 0.3,
                   child: CachedNetworkImage(
@@ -88,8 +103,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 70),
-           
+            SizedBox(height: size.height * 0.1),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        widget.user.fullName,
+                        style: Theme.of(context).textTheme.headlineLarge,
+                      ),
+                      SizedBox(
+                        width: size.width * 0.02,
+                      ),
+                      Text(
+                        '( ${widget.user.userName} )',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    widget.user.bio,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                 
+                  
+                ],
+              ),
+            ),
           ],
         ),
       ),
