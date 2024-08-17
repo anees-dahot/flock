@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = 'profile-screen';
-  const ProfileScreen({super.key, required this.user});
-  final UserModel user;
+  const ProfileScreen({super.key, this.user});
+  final UserModel? user;
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -45,10 +45,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: size.width,
                   height: size.height * 0.3,
                   child: CachedNetworkImage(
-                    imageUrl: widget.user.profileCover,
+                    imageUrl: widget.user!.profileCover,
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
+                        const Center(child: CircularProgressIndicator()),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   ),
@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(75),
                       child: CachedNetworkImage(
-                        imageUrl: widget.user.profileImage,
+                        imageUrl: widget.user!.profileImage,
                         width: 120,
                         height: 120,
                         fit: BoxFit.cover,
@@ -113,20 +113,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Row(
                     children: [
                       Text(
-                        widget.user.fullName,
+                        widget.user!.fullName,
                         style: Theme.of(context).textTheme.headlineLarge,
                       ),
                       SizedBox(
                         width: size.width * 0.02,
                       ),
                       Text(
-                        '( ${widget.user.userName} )',
+                        '( ${widget.user!.userName} )',
                         style: Theme.of(context).textTheme.headlineSmall,
                       ),
                     ],
                   ),
                   Text(
-                    widget.user.bio,
+                    widget.user!.bio,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   SizedBox(
@@ -152,15 +152,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                             widget.user.id == id ? Icon(CupertinoIcons.pencil) : widget.user.friends.contains(id)
-                                  ? const Icon(Icons.group, color: Colors.white)
-                                  : const Icon(Icons.person_add_alt,
-                                      color: Colors.white), // Added icon
+                              widget.user!.id == id
+                                  ? const Icon(CupertinoIcons.pencil)
+                                  : widget.user!.friends.contains(id)
+                                      ? const Icon(Icons.group,
+                                          color: Colors.white)
+                                      : const Icon(Icons.person_add_alt,
+                                          color: Colors.white),
                               const SizedBox(width: 8),
                               Text(
-                                 widget.user.id == id ? 'Add to story' : widget.user.friends.contains(id)
-                                    ? 'Friends'
-                                    : 'Send request',
+                                widget.user!.id == id
+                                    ? 'Add to story'
+                                    : widget.user!.friends.contains(id)
+                                        ? 'Friends'
+                                        : 'Send request',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!
@@ -188,10 +193,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                             const Icon(Icons.message, color: Colors.white),
+                              widget.user!.id == id
+                                  ? const Icon(CupertinoIcons
+                                      .person_crop_circle_badge_exclam)
+                                  : const Icon(Icons.message,
+                                      color: Colors.white),
                               const SizedBox(width: 8),
                               Text(
-                                'Message',
+                                widget.user!.id == id
+                                    ? 'Edit profile'
+                                    : 'Message',
                                 style: Theme.of(context)
                                     .textTheme
                                     .bodyLarge!

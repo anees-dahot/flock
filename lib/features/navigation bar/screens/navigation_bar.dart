@@ -1,5 +1,8 @@
 import 'package:flock/features/feed/screens/feed_screen.dart';
 import 'package:flock/features/friend%20requests/screens/friend_requests_screen.dart';
+import 'package:flock/features/profile/screens/profile_screen.dart';
+import 'package:flock/models/user.dart';
+import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
 
 class NavigationBarScreen extends StatefulWidget {
@@ -11,13 +14,31 @@ class NavigationBarScreen extends StatefulWidget {
 }
 
 class _NavigationBarScreenState extends State<NavigationBarScreen> {
+  UserModel? userModel;
   int _selectedIndex = 0;
   final List<Widget> pages = [
     const HomePage(),
     const FriendRequests(),
     const HomePage(),
+     ProfileScreen( ),
   ];
 
+void getData() async{
+  await Storage().getUserData().then((value) {
+    setState(() {
+      userModel = value;
+      pages[3] = ProfileScreen(user: userModel!);
+    });
+  });
+}
+
+@override
+  void initState() {
+  
+    super.initState();
+    getData();
+   
+  }
   void updatePage(int page) {
     setState(() {
       _selectedIndex = page;
