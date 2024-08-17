@@ -1,4 +1,5 @@
 import 'package:flock/core/theme/theme_cubit.dart';
+import 'package:flock/features/profile/screens/profile_screen.dart';
 import 'package:flock/features/splash%20screen/screens/splash_screen.dart';
 import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: lightTheme,
             darkTheme: darkTheme,
-            themeMode: ThemeMode.light,
+            themeMode: ThemeMode.dark,
             onGenerateRoute: generateRoute,
             // initialRoute: NavigationBarScreen.routeName,
             home: SplashScreen(),

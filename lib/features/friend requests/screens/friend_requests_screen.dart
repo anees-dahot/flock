@@ -1,7 +1,9 @@
 import 'package:flock/features/friend%20requests/bloc/friend_requests_bloc.dart';
 import 'package:flock/features/friend%20requests/repository/friend_requests_repository.dart';
+import 'package:flock/features/profile/screens/profile_screen.dart';
 import 'package:flock/utils/flush_message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class FriendRequests extends StatefulWidget {
@@ -84,32 +86,37 @@ class _FriendRequestsState extends State<FriendRequests> {
                           ),
                           child: Column(
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage:
-                                        NetworkImage(requests.profileImage),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          requests.fullName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                      ],
+                              GestureDetector(
+                                onTap: () => Navigator.of(context).pushNamed(
+                                    ProfileScreen.routeName,
+                                    arguments: requests),
+                                child: Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundImage:
+                                          NetworkImage(requests.profileImage),
                                     ),
-                                  ),
-                                ],
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            requests.fullName,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               const SizedBox(height: 10),
                               Row(
