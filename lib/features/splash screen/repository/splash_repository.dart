@@ -9,7 +9,8 @@ class SplashRepository {
   void redirectUser(BuildContext context) async {
     await Future.delayed(Duration(seconds: 2));
     Storage().getData('token').then((value) {
-      if (value == '') {
+      print(value);
+      if (value == null) {
         Navigator.of(context)
             .pushNamedAndRemoveUntil(LoginScreen.routeName, (route) => false);
       } else {

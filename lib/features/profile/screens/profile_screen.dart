@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flock/features/profile/bloc/profile_bloc.dart';
+import 'package:flock/features/profile/repository/profile_repository.dart';
 import 'package:flock/models/user.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
   static const String routeName = 'profile-screen';
@@ -13,12 +16,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late ProfileBloc _profileBloc;
   String? id;
 
   @override
   void initState() {
-    super.initState();
+    _profileBloc = ProfileBloc(profileRepository: ProfileRepository());
+    _profileBloc.add(GetFriendRequestsEvent());
     getId();
+    super.initState();
   }
 
   void getId() async {
@@ -32,219 +38,268 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.bottomLeft,
-              children: [
-                SizedBox(
-                  width: size.width,
-                  height: size.height * 0.3,
-                  child: CachedNetworkImage(
-                    imageUrl: widget.user!.profileCover,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                ),
-                Positioned(
-                  top: 30,
-                  left: 10,
-                  child: IconButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    icon: const Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ),
-                ),
-                Container(
-                  width: size.width,
-                  height: size.height * 0.3,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                      colors: [
-                        Colors.black.withOpacity(0.5),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-                Positioned(
-                  bottom: -60,
-                  left: 20,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(75),
-                      child: CachedNetworkImage(
-                        imageUrl: widget.user!.profileImage,
-                        width: 120,
-                        height: 120,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: size.height * 0.1),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    return BlocProvider(
+      create: (context) => _profileBloc,
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.bottomLeft,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        widget.user!.fullName,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                      ),
-                      SizedBox(
-                        width: size.width * 0.02,
-                      ),
-                      Text(
-                        '( ${widget.user!.userName} )',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    ],
-                  ),
-                  Text(
-                    widget.user!.bio,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
                   SizedBox(
-                    height: size.height * 0.02,
+                    width: size.width,
+                    height: size.height * 0.3,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.user!.profileCover,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
                   ),
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: size.width * 0.4,
-                          height: size.height * 0.055,
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.background,
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              widget.user!.id == id
-                                  ? const Icon(CupertinoIcons.pencil)
-                                  : widget.user!.friends.contains(id)
-                                      ? const Icon(Icons.group,
-                                          color: Colors.white)
-                                      : const Icon(Icons.person_add_alt,
-                                          color: Colors.white),
-                              const SizedBox(width: 8),
-                              Text(
-                                widget.user!.id == id
-                                    ? 'Add to story'
-                                    : widget.user!.friends.contains(id)
-                                        ? 'Friends'
-                                        : 'Send request',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
+                  Positioned(
+                    top: 30,
+                    left: 10,
+                    child: IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 30,
                       ),
-                      const SizedBox(width: 30),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          width: size.width * 0.4,
-                          height: size.height * 0.055,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.primary,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              widget.user!.id == id
-                                  ? const Icon(CupertinoIcons
-                                      .person_crop_circle_badge_exclam)
-                                  : const Icon(Icons.message,
-                                      color: Colors.white),
-                              const SizedBox(width: 8),
-                              Text(
-                                widget.user!.id == id
-                                    ? 'Edit profile'
-                                    : 'Message',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Divider(
-                    thickness: 1,
-                    color: Theme.of(context).colorScheme.secondaryContainer,
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    'Friends',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                   const SizedBox(
-                    height: 10,
+                    ),
                   ),
                   Container(
-                    width: size.width * 0.9,
+                    width: size.width,
                     height: size.height * 0.3,
                     decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.center,
+                        colors: [
+                          Colors.black.withOpacity(0.5),
+                          Colors.transparent,
+                        ],
+                      ),
                     ),
-                  )
+                  ),
+                  Positioned(
+                    bottom: -60,
+                    left: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 4),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(75),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.user!.profileImage,
+                          width: 120,
+                          height: 120,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: size.height * 0.1),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          widget.user!.fullName,
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                        SizedBox(
+                          width: size.width * 0.02,
+                        ),
+                        Text(
+                          '( ${widget.user!.userName} )',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      widget.user!.bio,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                    SizedBox(
+                      height: size.height * 0.02,
+                    ),
+                    Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            width: size.width * 0.42,
+                            height: size.height * 0.055,
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.background,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                widget.user!.id == id
+                                    ? const Icon(CupertinoIcons.pencil)
+                                    : widget.user!.friends.contains(id)
+                                        ? const Icon(Icons.group,
+                                            color: Colors.white)
+                                        : const Icon(Icons.person_add_alt,
+                                            color: Colors.white),
+                                const SizedBox(width: 8),
+                                Text(
+                                  widget.user!.id == id
+                                      ? 'Add to story'
+                                      : widget.user!.friends.contains(id)
+                                          ? 'Friends'
+                                          : 'Send request',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        color: Colors.white,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            width: size.width * 0.4,
+                            height: size.height * 0.055,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                widget.user!.id == id
+                                    ? const Icon(CupertinoIcons
+                                        .person_crop_circle_badge_exclam)
+                                    : const Icon(Icons.message,
+                                        color: Colors.white),
+                                const SizedBox(width: 8),
+                                Text(
+                                  widget.user!.id == id
+                                      ? 'Edit profile'
+                                      : 'Message',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                        color: Colors.white,
+                                      ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Friends',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    BlocBuilder<ProfileBloc, ProfileState>(
+                      bloc: _profileBloc,
+                      builder: (context, state) {
+                        if (state is GetFriendRequestsLoadingState) {
+                          return Container(
+                            width: size.width * 0.9,
+                            height: size.height * 0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else if (state is GetFriendRequestsFailureState) {
+                          return Container(
+                            width: size.width * 0.9,
+                            height: size.height * 0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Text(state.error),
+                            ),
+                          );
+                        } else if (state is GetFriendRequestsSuccessState) {
+                          return Container(
+                            width: size.width * 0.9,
+                            height: size.height * 0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Center(
+                              child: Text(state.friendRequests.first.password),
+                            ),
+                          );
+                        } else {
+                          return Container(
+                            width: size.width * 0.9,
+                            height: size.height * 0.3,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Center(
+                              child: Text('Nothing'),
+                            ),
+                          );
+                        }
+                      },
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

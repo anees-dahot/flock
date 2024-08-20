@@ -8,7 +8,7 @@ class ProfileRepository {
   Future<Map<String, dynamic>> getFriendRequests() async {
     String? token = await Storage().getData('token') as String;
     final response = await http.get(
-      Uri.parse('$baseUrl/api/get-friend-requests'),
+      Uri.parse('$baseUrl/api/get-friends'),
       headers: {
         'Content-Type': 'application/json',
         'x-auth-token': token,
@@ -19,13 +19,9 @@ class ProfileRepository {
 
     if (response.statusCode == 200) {
       final List<dynamic> data = responseBody;
-      final List<UserModel> friendRequests =
+      final List<UserModel> friends =
           data.map((userJson) => UserModel.fromJson(userJson)).toList();
-      return {
-        'status': 200,
-        'message': 'Logged in successfully',
-        'data': friendRequests
-      };
+      return {'status': 200, 'data': friends};
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': responseBody['msg']};
     } else {

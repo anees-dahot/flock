@@ -89,6 +89,23 @@ accountRouter.get("/api/get-friend-requests", auth, async (req, res) => {
   }
 });
 
+//* Get friends
+accountRouter.get("/api/get-friends", auth, async (req, res) => {
+  try {
+    const userId = req.user;
+    const user = await User.findById(userId).populate("friends");
+    if (!user) return res.status(400).json({ msg: "User does not exist!" });
+    const friends = user.friends;
+    if (friends.length === 0)
+      return res.status(400).json({ msg: "No friends." });
+    res.status(200).json(friends);
+    console.log(user.friends);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+    console.log(e.message);
+  }
+});
+
 //* Accept friends request
 accountRouter.post(
   "/api/accept-friend-requests/:userId",
