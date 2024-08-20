@@ -5,6 +5,7 @@ import 'package:flock/models/user.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -236,7 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text(
                       'Friends',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(
                       height: 10,
@@ -270,16 +271,108 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                         } else if (state is GetFriendRequestsSuccessState) {
                           return Container(
-                            width: size.width * 0.9,
-                            height: size.height * 0.3,
-                            decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Center(
-                              child: Text(state.friendRequests.first.password),
-                            ),
-                          );
+                              padding: const EdgeInsets.all(10),
+                              width: size.width * 0.9,
+                              height: size.height * 0.39,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryContainer,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: GridView.builder(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 14),
+                                      shrinkWrap: true, // Prevent scrolling
+                                      physics:
+                                          const NeverScrollableScrollPhysics(), // Prevent scrolling
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 3,
+                                              childAspectRatio: 0.68,
+                                              crossAxisSpacing: 14),
+                                      itemCount:
+                                          state.friendRequests.length == 6
+                                              ? 6
+                                              : state.friendRequests.length < 6
+                                                  ? state.friendRequests.length
+                                                  : 6,
+                                      itemBuilder: (context, index) {
+                                        final data =
+                                            state.friendRequests[index];
+                                        return Column(
+                                          children: [
+                                            Container(
+                                              width: 80,
+                                              height: 80,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: data.profileImage,
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      const Center(
+                                                          child:
+                                                              CircularProgressIndicator()),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Container(
+                                                    color: Colors.grey[300],
+                                                    child: Icon(Icons.person,
+                                                        size: 50,
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Flexible(
+                                              child: Text(
+                                                data.fullName,
+                                                textAlign: TextAlign.center,
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                ),
+                                                maxLines: 2,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  // SizedBox(height: size.height * 0.01),
+                                  Container(
+                                    width: size.width * 0.8,
+                                    height: size.height * 0.055,
+                                   decoration: 
+                                   BoxDecoration(
+                                    color: Theme.of(context).colorScheme.primary,
+                                    borderRadius: BorderRadius.circular(12)
+                                   ),
+                                   child: Center(child: Text('See more', style: Theme.of(context).textTheme.bodyLarge,),),
+                                  )
+                                ],
+                              ));
                         } else {
                           return Container(
                             width: size.width * 0.9,
@@ -294,10 +387,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                         }
                       },
-                    )
+                    ),
+                     const SizedBox(
+                      height: 20,
+                    ),
+                    Divider(
+                      thickness: 1,
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                    ),
                   ],
                 ),
               ),
+
+              SizedBox(height: size.height * 0.14)
             ],
           ),
         ),
