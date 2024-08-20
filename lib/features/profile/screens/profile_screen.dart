@@ -215,6 +215,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Divider(
+                    thickness: 1,
+                    color: Theme.of(context).colorScheme.secondaryContainer,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Friends',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                   const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: size.width * 0.9,
+                    height: size.height * 0.3,
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   )
                 ],
               ),
