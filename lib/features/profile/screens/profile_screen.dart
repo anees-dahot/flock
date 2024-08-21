@@ -66,7 +66,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const Icon(Icons.error),
                     ),
                   ),
-                  
                   Container(
                     width: size.width,
                     height: size.height * 0.3,
@@ -443,6 +442,71 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
+                    // SizedBox(height: size.height * 0.02),
+                    ListView.builder(
+  shrinkWrap: true,
+  physics: ClampingScrollPhysics(),
+  itemCount: 10,
+  itemBuilder: (context, index) {
+    return Card(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedNetworkImageProvider(widget.user!.profileImage),
+              radius: 20,
+            ),
+            title: Text(
+              widget.user!.fullName,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            subtitle: Text(
+              '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+              style: TextStyle(color: Colors.grey[600]),
+            ),
+            trailing: IconButton(
+              icon: Icon(CupertinoIcons.ellipsis),
+              onPressed: () {},
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              'Its Post content. ' * 10,
+              style: TextStyle(fontSize: 16),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(CupertinoIcons.heart, color: Colors.red),
+                    SizedBox(width: 4),
+                    Text('1.2k', style: TextStyle(fontWeight: FontWeight.bold)),
+                    SizedBox(width: 16),
+                    Icon(CupertinoIcons.chat_bubble, color: Colors.blue),
+                    SizedBox(width: 4),
+                    Text('84', style: TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Icon(CupertinoIcons.share, color: Theme.of(context).colorScheme.primary),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+)
                   ],
                 ),
               ),
