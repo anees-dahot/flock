@@ -7,4 +7,10 @@ sealed class ProfileEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetFriendRequestsEvent extends ProfileEvent {}
+class GetFriendRequestsEvent extends ProfileEvent {
+  final String userId;
+
+ const GetFriendRequestsEvent({required this.userId});
+  @override
+  List<Object> get props => [userId];
+}

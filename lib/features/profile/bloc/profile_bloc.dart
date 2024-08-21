@@ -18,7 +18,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       GetFriendRequestsEvent event, Emitter<ProfileState> emit) async {
     emit(GetFriendRequestsLoadingState());
     try {
-      final response = await profileRepository.getFriendRequests();
+      final response = await profileRepository.getFriendRequests(event.userId);
       if (response['status'] == 200) {
         emit(GetFriendRequestsSuccessState(friendRequests: response['data']));
       } else if (response['status'] == 400) {

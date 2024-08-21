@@ -5,10 +5,10 @@ import 'package:flock/utils/app_urls.dart';
 import 'package:flock/utils/storage.dart';
 
 class ProfileRepository {
-  Future<Map<String, dynamic>> getFriendRequests() async {
+  Future<Map<String, dynamic>> getFriendRequests(String userId) async {
     String? token = await Storage().getData('token') as String;
     final response = await http.get(
-      Uri.parse('$baseUrl/api/get-friends'),
+      Uri.parse('$baseUrl/api/get-friends/$userId'),
       headers: {
         'Content-Type': 'application/json',
         'x-auth-token': token,
