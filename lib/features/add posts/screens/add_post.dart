@@ -81,9 +81,11 @@ class _AddPostState extends State<AddPost> {
                             children: [
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 4),
+                                    horizontal: 12, vertical: 6),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.primaryContainer,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: DropdownButtonHideUnderline(
@@ -92,18 +94,51 @@ class _AddPostState extends State<AddPost> {
                                         .map((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
-                                        child: Text(value),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              value == 'Public'
+                                                  ? Icons.public
+                                                  : Icons.lock,
+                                              size: 18,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onSurface,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              value,
+                                              style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .onBackground,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       );
                                     }).toList(),
                                     value: _visibilityValue,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _visibilityValue = value;
-                                      });
-                                    },
-                                    icon:  Icon(Icons.arrow_drop_down,
-                                    color: Theme.of(context).colorScheme.onBackground,),
+                                    onChanged: (value) {},
+                                    icon: Icon(
+                                      Icons.arrow_drop_down,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                    ),
                                     isDense: true,
+                                    dropdownColor: Theme.of(context)
+                                        .colorScheme
+                                        .primaryContainer,
+                                    borderRadius: BorderRadius.circular(16),
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onBackground,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -127,24 +162,24 @@ class _AddPostState extends State<AddPost> {
                   ),
                 ),
                 const SizedBox(height: 20),
-             
-                  BlocBuilder<AddPostBloc, AddPostState>(
-  bloc: _addPostBloc,
-  builder: (context, state) {
-    if (state is PickPostImagesSuccessState && state.images.isNotEmpty) {
-      return Container(
-        height: 400,
-        width: double.infinity,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: _buildImageGrid(state.images),
-        ),
-      );
-    } else {
-      return SizedBox();
-    }
-  },
-)
+                BlocBuilder<AddPostBloc, AddPostState>(
+                  bloc: _addPostBloc,
+                  builder: (context, state) {
+                    if (state is PickPostImagesSuccessState &&
+                        state.images.isNotEmpty) {
+                      return Container(
+                        height: 400,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: _buildImageGrid(state.images),
+                        ),
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  },
+                )
               ],
             ),
           ),
@@ -154,76 +189,87 @@ class _AddPostState extends State<AddPost> {
   }
 
   Widget _buildImageGrid(List<String> imagePaths) {
-  int imageCount = imagePaths.length;
-  
-  if (imageCount == 1) {
-    return Image.file(File(imagePaths[0]), fit: BoxFit.cover);
-  } else if (imageCount == 2) {
-    return Row(
-      children: imagePaths.map((path) => Expanded(
-        child: Image.file(File(path), fit: BoxFit.cover)
-      )).toList(),
-    );
-  } else if (imageCount == 3) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Image.file(File(imagePaths[0]), fit: BoxFit.cover),
-        ),
-        const SizedBox(width: 2),
-        Expanded(
-          child: Column(
-            children: [
-              Expanded(child: Image.file(File(imagePaths[1]), fit: BoxFit.cover)),
-              const SizedBox(height: 2),
-              Expanded(child: Image.file(File(imagePaths[2]), fit: BoxFit.cover)),
-            ],
+    int imageCount = imagePaths.length;
+
+    if (imageCount == 1) {
+      return Image.file(File(imagePaths[0]), fit: BoxFit.cover);
+    } else if (imageCount == 2) {
+      return Row(
+        children: imagePaths
+            .map((path) =>
+                Expanded(child: Image.file(File(path), fit: BoxFit.cover)))
+            .toList(),
+      );
+    } else if (imageCount == 3) {
+      return Row(
+        children: [
+          Expanded(
+            flex: 2,
+            child: Image.file(File(imagePaths[0]), fit: BoxFit.cover),
           ),
-        ),
-      ],
-    );
-  } else {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 2,
-      crossAxisSpacing: 2,
-      children: imagePaths.asMap().entries.map((entry) {
-        int idx = entry.key;
-        String path = entry.value;
-        if (idx == 3 && imageCount > 4) {
-          return GestureDetector(
-            onTap: () => _openImageGallery(imagePaths),
-            child: Stack(
-              fit: StackFit.expand,
+          const SizedBox(width: 2),
+          Expanded(
+            child: Column(
               children: [
-                Image.file(File(path), fit: BoxFit.cover),
-                Container(
-                  color: Colors.black54,
-                  child: Center(
-                    child: Text(
-                      '+${imageCount - 4}',
-                      style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
+                Expanded(
+                    child: Image.file(File(imagePaths[1]), fit: BoxFit.cover)),
+                const SizedBox(height: 2),
+                Expanded(
+                    child: Image.file(File(imagePaths[2]), fit: BoxFit.cover)),
               ],
             ),
-          );
-        }
-        return Image.file(File(path), fit: BoxFit.cover);
-      }).toList().sublist(0, imageCount > 4 ? 4 : imageCount),
-    );
+          ),
+        ],
+      );
+    } else {
+      return GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+        children: imagePaths
+            .asMap()
+            .entries
+            .map((entry) {
+              int idx = entry.key;
+              String path = entry.value;
+              if (idx == 3 && imageCount > 4) {
+                return GestureDetector(
+                  onTap: () => _openImageGallery(imagePaths),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.file(File(path), fit: BoxFit.cover),
+                      Container(
+                        color: Colors.black54,
+                        child: Center(
+                          child: Text(
+                            '+${imageCount - 4}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return Image.file(File(path), fit: BoxFit.cover);
+            })
+            .toList()
+            .sublist(0, imageCount > 4 ? 4 : imageCount),
+      );
+    }
   }
-}
 
-void _openImageGallery(List<String> imagePaths) {
-  Navigator.of(context).push(MaterialPageRoute(
-    builder: (context) => ImageGalleryPage(images: imagePaths),
-  ));
-}
+  void _openImageGallery(List<String> imagePaths) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => ImageGalleryPage(images: imagePaths),
+    ));
+  }
 
   Widget _buildImageButton() {
     return InkWell(
@@ -231,9 +277,9 @@ void _openImageGallery(List<String> imagePaths) {
         _addPostBloc.add(PickPostImagesEvent());
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
         decoration: BoxDecoration(
-         color: Theme.of(context).colorScheme.primaryContainer,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -242,13 +288,13 @@ void _openImageGallery(List<String> imagePaths) {
             Icon(
               Icons.image,
               size: 18,
-               color: Theme.of(context).colorScheme.onBackground,
+              color: Theme.of(context).colorScheme.onBackground,
             ),
             const SizedBox(width: 4),
             Text(
               'Photo',
               style: TextStyle(
-               color: Theme.of(context).colorScheme.onBackground,
+                color: Theme.of(context).colorScheme.onBackground,
                 fontWeight: FontWeight.bold,
               ),
             ),

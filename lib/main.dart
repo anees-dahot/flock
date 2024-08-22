@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: lightTheme,
             darkTheme: darkTheme,
-            themeMode: ThemeMode.light,
+            themeMode: ThemeMode.dark,
             onGenerateRoute: generateRoute,
             // initialRoute: NavigationBarScreen.routeName,
             home: AddPost(),
