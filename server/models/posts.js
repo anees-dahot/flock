@@ -31,7 +31,8 @@ const postSchema = new mongoose.Schema({
   ],
   postVideos: [
     {
-      url: { type: String, trim: true },
+      type: String,
+      trim: true,
     },
   ],
   postedAt: {
@@ -40,15 +41,8 @@ const postSchema = new mongoose.Schema({
   },
   privacy: {
     type: String,
-    enum: ["public", "friends", "private"],
     default: "public",
   },
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
   totalReacts: { type: Number, default: 0 },
   totalComments: { type: Number, default: 0 },
   totalShares: { type: Number, default: 0 },
