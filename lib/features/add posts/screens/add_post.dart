@@ -16,8 +16,7 @@ class AddPost extends StatefulWidget {
 
 class _AddPostState extends State<AddPost> {
   final TextEditingController _textController = TextEditingController();
-  bool _isImageSelected = false;
-  String? _visibilityValue = 'Public';
+  String? visibilityValue = 'Public';
   UserModel? user;
   late AddPostBloc _addPostBloc;
 
@@ -35,6 +34,7 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
+    print('widget built');
     return BlocProvider(
       create: (context) => _addPostBloc,
       child: Scaffold(
@@ -79,68 +79,85 @@ class _AddPostState extends State<AddPost> {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    items: ['Public', 'Private']
-                                        .map((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(
-                                              value == 'Public'
-                                                  ? Icons.public
-                                                  : Icons.lock,
-                                              size: 18,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .onSurface,
+                              BlocBuilder<AddPostBloc, AddPostState>(
+                                bloc: _addPostBloc,
+                                buildWhen: (previous, current) =>
+                                    current is ChoosePostVisibilitySuccessState,
+                                builder: (context, state) {
+                                  String currentVisibility = visibilityValue!;
+                                  if (state
+                                      is ChoosePostVisibilitySuccessState) {
+                                    currentVisibility = state.visibilityType;
+                                  }
+                                  print('dropdwon built');
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 6),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primaryContainer,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton<String>(
+                                        items: ['Public', 'Private']
+                                            .map((String value) {
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  value == 'Public'
+                                                      ? Icons.public
+                                                      : Icons.lock,
+                                                  size: 18,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface,
+                                                ),
+                                                const SizedBox(width: 8),
+                                                Text(
+                                                  value,
+                                                  style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onBackground,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              value,
-                                              style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
+                                          );
+                                        }).toList(),
+                                        value: currentVisibility,
+                                        onChanged: (value) {
+                                          _addPostBloc.add(
+                                              ChoosePostVisibilityEvent(
+                                                  visibilityType: value!));
+                                        },
+                                        icon: Icon(
+                                          Icons.arrow_drop_down,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
                                         ),
-                                      );
-                                    }).toList(),
-                                    value: _visibilityValue,
-                                    onChanged: (value) {},
-                                    icon: Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground,
+                                        isDense: true,
+                                        dropdownColor: Theme.of(context)
+                                            .colorScheme
+                                            .primaryContainer,
+                                        borderRadius: BorderRadius.circular(16),
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground,
+                                          fontSize: 14,
+                                        ),
+                                      ),
                                     ),
-                                    isDense: true,
-                                    dropdownColor: Theme.of(context)
-                                        .colorScheme
-                                        .primaryContainer,
-                                    borderRadius: BorderRadius.circular(16),
-                                    style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
                               const SizedBox(width: 8),
                               _buildImageButton(),
@@ -167,7 +184,8 @@ class _AddPostState extends State<AddPost> {
                   builder: (context, state) {
                     if (state is PickPostImagesSuccessState &&
                         state.images.isNotEmpty) {
-                      return Container(
+                      print('image built');
+                      return SizedBox(
                         height: 400,
                         width: double.infinity,
                         child: ClipRRect(
@@ -176,7 +194,7 @@ class _AddPostState extends State<AddPost> {
                         ),
                       );
                     } else {
-                      return SizedBox();
+                      return const SizedBox();
                     }
                   },
                 )
@@ -225,7 +243,7 @@ class _AddPostState extends State<AddPost> {
       return GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: 2,
         crossAxisSpacing: 2,
         children: imagePaths
@@ -246,7 +264,7 @@ class _AddPostState extends State<AddPost> {
                         child: Center(
                           child: Text(
                             '+${imageCount - 4}',
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold),
@@ -308,13 +326,13 @@ class _AddPostState extends State<AddPost> {
 class ImageGalleryPage extends StatelessWidget {
   final List<String> images;
 
-  const ImageGalleryPage({Key? key, required this.images}) : super(key: key);
+  const ImageGalleryPage({super.key, required this.images});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Gallery'),
+        title: const Text('Gallery'),
       ),
       body: PageView.builder(
         itemCount: images.length,
