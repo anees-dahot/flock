@@ -11,6 +11,7 @@ part 'add_post_state.dart';
 class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
   AddPostBloc() : super(AddPostInitial()) {
     on<PickPostImagesEvent>(pickPostImagesEvent);
+    on<ChoosePostVisibilityEvent>(choosePostVisibilityEvent);
   }
 
   FutureOr<void> pickPostImagesEvent(
@@ -23,5 +24,11 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
     } catch (e) {
       emit(PickPostImagesFailureState(error: e.toString()));
     }
+  }
+
+  FutureOr<void> choosePostVisibilityEvent(
+      ChoosePostVisibilityEvent event, Emitter<AddPostState> emit) {
+    emit(
+        ChoosePostVisibilitySuccessState(visibilityType: event.visibilityType));
   }
 }
