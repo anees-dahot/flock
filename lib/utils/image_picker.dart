@@ -6,4 +6,9 @@ class Utils {
         await ImagePicker().pickImage(source: ImageSource.gallery);
     return image;
   }
+
+  static Future<List<XFile>?> pickMultipleImages() async {
+    final List<XFile> images = await ImagePicker().pickMultiImage();
+    return images;
+  }
 }
