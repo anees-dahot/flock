@@ -1,4 +1,5 @@
 import 'package:flock/core/theme/theme_cubit.dart';
+import 'package:flock/features/add%20posts/screens/add_post.dart';
 import 'package:flock/features/splash%20screen/screens/splash_screen.dart';
 import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
             themeMode: ThemeMode.light,
             onGenerateRoute: generateRoute,
             // initialRoute: NavigationBarScreen.routeName,
-            home: SplashScreen(),
+            home: AddPost(),
           );
         },
       ),
