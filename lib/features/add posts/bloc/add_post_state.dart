@@ -26,3 +26,11 @@ class PickPostImagesFailureState extends AddPostState {
   @override
   List<Object> get props => [error];
 }
+
+class ChoosePostVisibilitySuccessState extends AddPostState {
+  final String visibilityType;
+
+  const ChoosePostVisibilitySuccessState({required this.visibilityType});
+  @override
+  List<Object> get props => [visibilityType];
+}

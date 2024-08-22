@@ -7,6 +7,12 @@ sealed class AddPostEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class PickPostImagesEvent extends AddPostEvent {}
 
+class ChoosePostVisibilityEvent extends AddPostEvent {
+  final String visibilityType;
 
-class PickPostImagesEvent extends AddPostEvent{}
+  const ChoosePostVisibilityEvent({required this.visibilityType});
+  @override
+  List<Object> get props => [visibilityType];
+}
