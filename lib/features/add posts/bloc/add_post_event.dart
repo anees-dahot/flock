@@ -16,3 +16,18 @@ class ChoosePostVisibilityEvent extends AddPostEvent {
   @override
   List<Object> get props => [visibilityType];
 }
+
+class AddPost extends AddPostEvent {
+  final String postText;
+  final List<String> postImages;
+  final List<String> postVideos;
+  final String privacy;
+
+  const AddPost(
+      {required this.postText,
+      required this.postImages,
+      required this.postVideos,
+      required this.privacy});
+  @override
+  List<Object> get props => [postText, postImages, postVideos, privacy];
+}
