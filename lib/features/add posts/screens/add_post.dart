@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/features/add%20posts/bloc/add_post_bloc.dart';
+import 'package:flock/features/add%20posts/repository/add_post_repository.dart';
 import 'package:flock/models/user.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class _AddPostState extends State<AddPost> {
   @override
   void initState() {
     getUser();
-    _addPostBloc = AddPostBloc();
+    _addPostBloc = AddPostBloc(addPostRepository: AddPostRepository());
     super.initState();
   }
 
@@ -34,7 +35,7 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
-    print('widget built');
+    final size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => _addPostBloc,
       child: Scaffold(
@@ -42,12 +43,38 @@ class _AddPostState extends State<AddPost> {
           title: const Text('Create Post',
               style: TextStyle(fontWeight: FontWeight.bold)),
           actions: [
-            TextButton(
-              child: const Text('Publish',
-                  style: TextStyle(
-                      color: Colors.blue, fontWeight: FontWeight.bold)),
-              onPressed: () {
-                // Call the function to publish the post
+            BlocConsumer<AddPostBloc, AddPostState>(
+              bloc: _addPostBloc,
+              listener: (context, state) {
+              
+              },
+              builder: (context, state) {
+                if (state is AddPostLoadingState) {
+                  return Container(
+                    width: size.width * 0.28,
+                    height: size.height * 0.05,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: const Center(
+                        child: CircularProgressIndicator(
+                      color: Colors.white,
+                    )),
+                  );
+                } else {
+                  return Container(
+                    width: size.width * 0.28,
+                    height: size.height * 0.05,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Center(
+                        child: Text(
+                      'Publish',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    )),
+                  );
+                }
               },
             ),
           ],
