@@ -9,6 +9,8 @@ part 'add_post_event.dart';
 part 'add_post_state.dart';
 
 class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
+  List<String> images = [];
+  String visibilityType = '';
   AddPostBloc() : super(AddPostInitial()) {
     on<PickPostImagesEvent>(pickPostImagesEvent);
     on<ChoosePostVisibilityEvent>(choosePostVisibilityEvent);
@@ -18,9 +20,10 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
       PickPostImagesEvent event, Emitter<AddPostState> emit) async {
     emit(PickPostImagesLoadingState());
     try {
-      final List<XFile>? images = await Utils.pickMultipleImages();
+      final List<XFile>? selectedImage = await Utils.pickMultipleImages();
+      selectedImage?.map((e) => images.add(e.path));
       emit(PickPostImagesSuccessState(
-          images: images?.map((image) => image.path).toList() ?? []));
+          images: selectedImage?.map((image) => image.path).toList() ?? []));
     } catch (e) {
       emit(PickPostImagesFailureState(error: e.toString()));
     }
@@ -28,6 +31,7 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
 
   FutureOr<void> choosePostVisibilityEvent(
       ChoosePostVisibilityEvent event, Emitter<AddPostState> emit) {
+    visibilityType = event.visibilityType;
     emit(
         ChoosePostVisibilitySuccessState(visibilityType: event.visibilityType));
   }
