@@ -17,13 +17,13 @@ class ChoosePostVisibilityEvent extends AddPostEvent {
   List<Object> get props => [visibilityType];
 }
 
-class AddPost extends AddPostEvent {
+class AddPostFunction extends AddPostEvent {
   final String postText;
   final List<String> postImages;
   final List<String> postVideos;
   final String privacy;
 
-  const AddPost(
+  const AddPostFunction(
       {required this.postText,
       required this.postImages,
       required this.postVideos,

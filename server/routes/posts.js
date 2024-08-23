@@ -17,8 +17,10 @@ postsRouter.post("/api/posts/add-post", auth, async (req, res) => {
     await newPost.save();
     res
       .status(200)
-      .json({ message: "Post publishes successfully", post: newPost });
+      .json({ message: "Post published successfully", post: newPost });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
+
+module.exports = postsRouter;

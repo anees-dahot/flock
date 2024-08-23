@@ -2,11 +2,13 @@ const express = require("express");
 const accountRouter = require("./routes/auth");
 const authrouter = require("./routes/account");
 const mongoose = require("mongoose");
+const postsRouter = require("./routes/posts");
 const app = express();
 const PORT = 3000;
 app.use(express.json());
 app.use(authrouter);
 app.use(accountRouter);
+app.use(postsRouter);
 
 mongoose
   .connect(

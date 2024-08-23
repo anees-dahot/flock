@@ -16,7 +16,7 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
   AddPostBloc({required this.addPostRepository}) : super(AddPostInitial()) {
     on<PickPostImagesEvent>(pickPostImagesEvent);
     on<ChoosePostVisibilityEvent>(choosePostVisibilityEvent);
-    on<AddPost>(addPost);
+    on<AddPostFunction>(addPost);
   }
 
   FutureOr<void> pickPostImagesEvent(
@@ -39,7 +39,7 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
         ChoosePostVisibilitySuccessState(visibilityType: event.visibilityType));
   }
 
-  FutureOr<void> addPost(AddPost event, Emitter<AddPostState> emit) async {
+  FutureOr<void> addPost(AddPostFunction event, Emitter<AddPostState> emit) async {
     emit(AddPostLoadingState());
     try {
       final response = await addPostRepository.addPost(

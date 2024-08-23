@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/features/add%20posts/bloc/add_post_bloc.dart';
 import 'package:flock/features/add%20posts/repository/add_post_repository.dart';
 import 'package:flock/models/user.dart';
+import 'package:flock/utils/flush_message.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,8 +46,15 @@ class _AddPostState extends State<AddPost> {
           actions: [
             BlocConsumer<AddPostBloc, AddPostState>(
               bloc: _addPostBloc,
+              listenWhen: (previous, current) => current is AddPostActionState,
               listener: (context, state) {
-              
+                if (state is AddPostFailureState) {
+                  NotificationHelper.showErrorNotification(
+                      context, state.error);
+                } else if (state is AddPostSucccessState) {
+                  NotificationHelper.showSuccessNotification(
+                      context, state.message);
+                }
               },
               builder: (context, state) {
                 if (state is AddPostLoadingState) {
@@ -62,17 +70,24 @@ class _AddPostState extends State<AddPost> {
                     )),
                   );
                 } else {
-                  return Container(
-                    width: size.width * 0.28,
-                    height: size.height * 0.05,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: Center(
-                        child: Text(
-                      'Publish',
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    )),
+                  return GestureDetector(
+                    onTap: () => _addPostBloc.add(AddPostFunction(
+                        postText: _textController.text,
+                        postImages: _addPostBloc.images,
+                        postVideos: const [],
+                        privacy: _addPostBloc.visibilityType)),
+                    child: Container(
+                      width: size.width * 0.28,
+                      height: size.height * 0.05,
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Center(
+                          child: Text(
+                        'Publish',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      )),
+                    ),
                   );
                 }
               },
