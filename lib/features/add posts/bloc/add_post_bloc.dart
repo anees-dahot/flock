@@ -10,8 +10,6 @@ part 'add_post_event.dart';
 part 'add_post_state.dart';
 
 class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
-  List<String> images = [];
-  String visibilityType = '';
   AddPostRepository addPostRepository;
   AddPostBloc({required this.addPostRepository}) : super(AddPostInitial()) {
     on<PickPostImagesEvent>(pickPostImagesEvent);
@@ -24,9 +22,8 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
     emit(PickPostImagesLoadingState());
     try {
       final List<XFile>? selectedImage = await Utils.pickMultipleImages();
-      selectedImage?.map((e) => images.add(e.path));
       emit(PickPostImagesSuccessState(
-          images: selectedImage?.map((image) => image.path).toList() ?? []));
+          images: selectedImage!.map((e) => e.path).toList()));
     } catch (e) {
       emit(PickPostImagesFailureState(error: e.toString()));
     }
@@ -34,12 +31,12 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
 
   FutureOr<void> choosePostVisibilityEvent(
       ChoosePostVisibilityEvent event, Emitter<AddPostState> emit) {
-    visibilityType = event.visibilityType;
     emit(
         ChoosePostVisibilitySuccessState(visibilityType: event.visibilityType));
   }
 
-  FutureOr<void> addPost(AddPostFunction event, Emitter<AddPostState> emit) async {
+  FutureOr<void> addPost(
+      AddPostFunction event, Emitter<AddPostState> emit) async {
     emit(AddPostLoadingState());
     try {
       final response = await addPostRepository.addPost(
@@ -49,15 +46,20 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
           privacy: event.privacy);
       if (response['status'] == 200) {
         emit(AddPostSucccessState(message: response['message']));
+        print(response['message']);
       } else if (response['status'] == 400) {
         emit(AddPostFailureState(error: response['message']));
+        print(response['message']);
       } else if (response['status'] == 500) {
         emit(AddPostFailureState(error: response['message']));
+        print(response['message']);
       } else {
         emit(AddPostFailureState(error: response['message']));
+        print(response['message']);
       }
     } catch (e) {
       emit(AddPostFailureState(error: e.toString()));
+      print(e.toString());
     }
   }
 }

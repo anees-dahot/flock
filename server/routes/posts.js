@@ -18,6 +18,7 @@ postsRouter.post("/api/posts/add-post", auth, async (req, res) => {
     res
       .status(200)
       .json({ message: "Post published successfully", post: newPost });
+      console.log(newPost);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

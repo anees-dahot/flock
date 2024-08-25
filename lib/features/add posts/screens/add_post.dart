@@ -19,6 +19,7 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   final TextEditingController _textController = TextEditingController();
   String? visibilityValue = 'Public';
+  List<String> images = [];
   UserModel? user;
   late AddPostBloc _addPostBloc;
 
@@ -27,6 +28,12 @@ class _AddPostState extends State<AddPost> {
     getUser();
     _addPostBloc = AddPostBloc(addPostRepository: AddPostRepository());
     super.initState();
+  }
+  @override
+  void dispose() {
+    _addPostBloc.close();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   void getUser() async {
@@ -72,10 +79,11 @@ class _AddPostState extends State<AddPost> {
                 } else {
                   return GestureDetector(
                     onTap: () => _addPostBloc.add(AddPostFunction(
-                        postText: _textController.text,
-                        postImages: _addPostBloc.images,
-                        postVideos: const [],
-                        privacy: _addPostBloc.visibilityType)),
+                      postText: _textController.text,
+                      postImages: images,
+                      postVideos: const [],
+                      privacy: visibilityValue!,
+                    )),
                     child: Container(
                       width: size.width * 0.28,
                       height: size.height * 0.05,
@@ -124,7 +132,9 @@ class _AddPostState extends State<AddPost> {
                               BlocBuilder<AddPostBloc, AddPostState>(
                                 bloc: _addPostBloc,
                                 buildWhen: (previous, current) =>
-                                    current is ChoosePostVisibilitySuccessState,
+                                    current is !PickPostImagesFailureState || 
+                                    current is !PickPostImagesLoadingState || 
+                                    current is !PickPostImagesSuccessState,
                                 builder: (context, state) {
                                   String currentVisibility = visibilityValue!;
                                   if (state
@@ -223,9 +233,13 @@ class _AddPostState extends State<AddPost> {
                 const SizedBox(height: 20),
                 BlocBuilder<AddPostBloc, AddPostState>(
                   bloc: _addPostBloc,
+                buildWhen: (previous, current) => previous.images != current.images,
                   builder: (context, state) {
                     if (state is PickPostImagesSuccessState &&
                         state.images.isNotEmpty) {
+                     images.addAll(state.images);
+                     print(images.length);
+                     print(images.first);
                       print('image built');
                       return SizedBox(
                         height: 400,
