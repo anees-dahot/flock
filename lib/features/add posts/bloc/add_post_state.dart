@@ -1,56 +1,54 @@
 part of 'add_post_bloc.dart';
 
-sealed class AddPostState extends Equatable {
-  const AddPostState();
+abstract class AddPostState extends Equatable {
+  final List<String> images;
+  final String visibilityType;
+  
+  const AddPostState({
+    this.images = const [],
+    this.visibilityType = 'Public',
+  });
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [images, visibilityType];
 }
 
-abstract class AddPostActionState extends AddPostState {}
+class AddPostInitial extends AddPostState {}
 
-final class AddPostInitial extends AddPostState {}
+class AddPostLoading extends AddPostState {}
 
-class PickPostImagesLoadingState extends AddPostState {}
-
-class PickPostImagesSuccessState extends AddPostState {
+class AddPostImagesUpdated extends AddPostState {
   final List<String> images;
 
-  const PickPostImagesSuccessState({required this.images});
+  const AddPostImagesUpdated({required this.images}) : super(images: images);
+
   @override
   List<Object> get props => [images];
 }
 
-class PickPostImagesFailureState extends AddPostState {
-  final String error;
-
-  const PickPostImagesFailureState({required this.error});
-  @override
-  List<Object> get props => [error];
-}
-
-class ChoosePostVisibilitySuccessState extends AddPostState {
+class AddPostVisibilityChanged extends AddPostState {
   final String visibilityType;
 
-  const ChoosePostVisibilitySuccessState({required this.visibilityType});
+  const AddPostVisibilityChanged({required this.visibilityType}) : super(visibilityType: visibilityType);
+
   @override
   List<Object> get props => [visibilityType];
 }
 
-class AddPostLoadingState extends AddPostState {}
-
-class AddPostFailureState extends AddPostActionState {
-  final String error;
-
-  AddPostFailureState({required this.error});
-  @override
-  List<Object> get props => [error];
-}
-
-class AddPostSucccessState extends AddPostActionState {
+class AddPostSuccess extends AddPostState {
   final String message;
 
-  AddPostSucccessState({required this.message});
+  const AddPostSuccess({required this.message});
+
   @override
   List<Object> get props => [message];
+}
+
+class AddPostError extends AddPostState {
+  final String error;
+
+  const AddPostError({required this.error});
+
+  @override
+  List<Object> get props => [error];
 }

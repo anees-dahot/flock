@@ -7,17 +7,20 @@ import '../../../utils/app_urls.dart';
 
 class AddPostRepository {
   Future<Map<String, dynamic>> addPost(
-      {required String postText,
-      required List<String> postImages,
-      required List<String> postVideos,
-      required String privacy}) async {
+      {required String postText, required List<String> postVideos}) async {
+    final String type = await Storage().getData('visibilityType') as String;
+    final List<String>? images =
+        await Storage().getList('images') as List<String>?;
     final cloudinary = CloudinaryPublic('doaewaso1', 'one9vigp');
     List<String> imageUrl = [];
-    for (int i = 0; i < postImages.length; i++) {
-      final CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(postImages[i],
-              folder: postText.split(' ').sublist(0, 3).join('_')));
-      imageUrl.add(res.secureUrl);
+    if (images != null) {
+  
+        for (int i = 0; i < images.length; i++) {
+        final CloudinaryResponse res = await cloudinary
+            .uploadFile(CloudinaryFile.fromFile(images[i], folder: _generateRandomString()));
+        imageUrl.add(res.secureUrl);
+      }
+     
     }
     String? token = await Storage().getData('token') as String;
     final response = await http.post(Uri.parse('$baseUrl/api/posts/add-post'),
@@ -29,7 +32,7 @@ class AddPostRepository {
           'postText': postText,
           'postImages': imageUrl,
           'postVideos': postVideos,
-          'privacy': privacy,
+          'privacy': type,
         }));
 
     final responseBody = jsonDecode(response.body);
@@ -41,5 +44,10 @@ class AddPostRepository {
     } else {
       return {'status': response.statusCode, 'message': responseBody['error']};
     }
+  }
+
+  String _generateRandomString([int length = 10]) {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    return List.generate(length, (index) => chars[(index % chars.length)]).join();
   }
 }

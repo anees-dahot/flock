@@ -26,9 +26,11 @@ class _AddPostState extends State<AddPost> {
   @override
   void initState() {
     getUser();
+    initialization();
     _addPostBloc = AddPostBloc(addPostRepository: AddPostRepository());
     super.initState();
   }
+
   @override
   void dispose() {
     _addPostBloc.close();
@@ -39,6 +41,18 @@ class _AddPostState extends State<AddPost> {
   void getUser() async {
     user = await Storage().getUserData();
     setState(() {});
+  }
+
+  void initialization() async {
+    final List<String>? images =
+        await Storage().deleteList('images') as List<String>?;
+    if (images != null) {
+      // Check if images is not null
+      print(images.length);
+    } else {
+      print('No images found'); // Handle the null case
+    }
+    await Storage().saveDate('visibilityType', 'Public');
   }
 
   @override
@@ -52,54 +66,58 @@ class _AddPostState extends State<AddPost> {
               style: TextStyle(fontWeight: FontWeight.bold)),
           actions: [
             BlocConsumer<AddPostBloc, AddPostState>(
-              bloc: _addPostBloc,
-              listenWhen: (previous, current) => current is AddPostActionState,
-              listener: (context, state) {
-                if (state is AddPostFailureState) {
-                  NotificationHelper.showErrorNotification(
-                      context, state.error);
-                } else if (state is AddPostSucccessState) {
-                  NotificationHelper.showSuccessNotification(
-                      context, state.message);
-                }
-              },
-              builder: (context, state) {
-                if (state is AddPostLoadingState) {
-                  return Container(
-                    width: size.width * 0.28,
-                    height: size.height * 0.05,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary,
-                        borderRadius: BorderRadius.circular(12)),
-                    child: const Center(
-                        child: CircularProgressIndicator(
-                      color: Colors.white,
-                    )),
-                  );
-                } else {
-                  return GestureDetector(
-                    onTap: () => _addPostBloc.add(AddPostFunction(
-                      postText: _textController.text,
-                      postImages: images,
-                      postVideos: const [],
-                      privacy: visibilityValue!,
-                    )),
-                    child: Container(
+                bloc: _addPostBloc,
+                listenWhen: (previous, current) =>
+                    current is AddPostSuccess || current is AddPostError,
+                listener: (context, state) {
+                  if (state is AddPostError) {
+                    NotificationHelper.showErrorNotification(
+                        context, state.error);
+                    _addPostBloc.add(ResetAddPostState());
+                  } else if (state is AddPostSuccess) {
+                    NotificationHelper.showSuccessNotification(
+                        context, state.message);
+                    _addPostBloc.add(ResetAddPostState());
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AddPostLoading) {
+                    return Container(
                       width: size.width * 0.28,
                       height: size.height * 0.05,
                       decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
+                    );
+                  } else {
+                    return GestureDetector(
+                      onTap: () {
+                        _addPostBloc.add(AddPostFunction(
+                          postText: _textController.text,
+                          postVideos: const [],
+                        ));
+                      },
+                      child: Container(
+                        width: size.width * 0.28,
+                        height: size.height * 0.05,
+                        decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(12)),
-                      child: Center(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
                           child: Text(
-                        'Publish',
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      )),
-                    ),
-                  );
-                }
-              },
-            ),
+                            'Publish',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                })
           ],
         ),
         body: SingleChildScrollView(
@@ -131,17 +149,11 @@ class _AddPostState extends State<AddPost> {
                             children: [
                               BlocBuilder<AddPostBloc, AddPostState>(
                                 bloc: _addPostBloc,
-                                buildWhen: (previous, current) =>
-                                    current is !PickPostImagesFailureState || 
-                                    current is !PickPostImagesLoadingState || 
-                                    current is !PickPostImagesSuccessState,
                                 builder: (context, state) {
                                   String currentVisibility = visibilityValue!;
-                                  if (state
-                                      is ChoosePostVisibilitySuccessState) {
+                                  if (state.visibilityType != '') {
                                     currentVisibility = state.visibilityType;
                                   }
-                                  print('dropdwon built');
                                   return Container(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 12, vertical: 6),
@@ -186,8 +198,9 @@ class _AddPostState extends State<AddPost> {
                                         value: currentVisibility,
                                         onChanged: (value) {
                                           _addPostBloc.add(
-                                              ChoosePostVisibilityEvent(
-                                                  visibilityType: value!));
+                                            ChoosePostVisibilityEvent(
+                                                visibilityType: value!),
+                                          );
                                         },
                                         icon: Icon(
                                           Icons.arrow_drop_down,
@@ -233,14 +246,10 @@ class _AddPostState extends State<AddPost> {
                 const SizedBox(height: 20),
                 BlocBuilder<AddPostBloc, AddPostState>(
                   bloc: _addPostBloc,
-                buildWhen: (previous, current) => previous.images != current.images,
+                  buildWhen: (previous, current) =>
+                      current is AddPostImagesUpdated,
                   builder: (context, state) {
-                    if (state is PickPostImagesSuccessState &&
-                        state.images.isNotEmpty) {
-                     images.addAll(state.images);
-                     print(images.length);
-                     print(images.first);
-                      print('image built');
+                    if (state.images.isNotEmpty) {
                       return SizedBox(
                         height: 400,
                         width: double.infinity,
@@ -253,7 +262,7 @@ class _AddPostState extends State<AddPost> {
                       return const SizedBox();
                     }
                   },
-                )
+                ),
               ],
             ),
           ),

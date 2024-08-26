@@ -1,6 +1,6 @@
 part of 'add_post_bloc.dart';
 
-sealed class AddPostEvent extends Equatable {
+abstract class AddPostEvent extends Equatable {
   const AddPostEvent();
 
   @override
@@ -13,21 +13,22 @@ class ChoosePostVisibilityEvent extends AddPostEvent {
   final String visibilityType;
 
   const ChoosePostVisibilityEvent({required this.visibilityType});
+
   @override
   List<Object> get props => [visibilityType];
 }
 
 class AddPostFunction extends AddPostEvent {
   final String postText;
-  final List<String> postImages;
   final List<String> postVideos;
-  final String privacy;
 
-  const AddPostFunction(
-      {required this.postText,
-      required this.postImages,
-      required this.postVideos,
-      required this.privacy});
+  const AddPostFunction({
+    required this.postText,
+    required this.postVideos,
+  });
+
   @override
-  List<Object> get props => [postText, postImages, postVideos, privacy];
+  List<Object> get props => [postText, postVideos];
 }
+
+class ResetAddPostState extends AddPostEvent {}

@@ -28,7 +28,8 @@ const postSchema = new mongoose.Schema({
   ],
   postImages: [
     {
-      url: { type: String, trim: true },
+      type: String,
+      trim: true,
     },
   ],
   postVideos: [
