@@ -4,11 +4,13 @@ import 'package:flock/features/splash%20screen/screens/splash_screen.dart';
 import 'package:flock/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'core/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //  await Workmanager().initialize(callbackDispatcher);
 
   final themeCubit = ThemeCubit();
   await themeCubit.loadTheme();

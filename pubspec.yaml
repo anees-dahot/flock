@@ -44,6 +44,8 @@ dependencies:
   another_flushbar: ^1.12.30
   cloudinary_public: ^0.23.1
   cached_network_image: ^3.4.0
+  workmanager: ^0.5.2
+  flutter_local_notifications: ^17.2.2
 
 dev_dependencies:
   flutter_test:
