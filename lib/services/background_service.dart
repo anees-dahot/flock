@@ -1,47 +1,82 @@
 import 'package:flock/features/add%20posts/repository/add_post_repository.dart';
-import 'package:workmanager/workmanager.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+Future<void> initializeService() async {
+  final service = FlutterBackgroundService();
+
+  await service.configure(
+    androidConfiguration: AndroidConfiguration(
+      onStart: onStart, // onStart is the callback to run when service starts
+      autoStart: true,
+      isForegroundMode: true,
+    ),
+    iosConfiguration: IosConfiguration(
+      onForeground: onStart,
+      onBackground: null,
+    ),
+  );
+
+  service.startService();
+}
+
 @pragma('vm:entry-point')
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    switch (task) {
-      case 'uploadPost':
-        final repository = AddPostRepository();
-        final flutterLocalNotificationsPlugin =
-            FlutterLocalNotificationsPlugin();
+void onStart(ServiceInstance service) async {
+  // Setup service configuration
+  if (service is AndroidServiceInstance) {
+    service.on('setAsForeground').listen((event) {
+      service.setAsForegroundService();
+    });
 
-        // Initialize notifications
-        const AndroidInitializationSettings initializationSettingsAndroid =
-            AndroidInitializationSettings('@mipmap/ic_launcher');
-        const InitializationSettings initializationSettings =
-            InitializationSettings(android: initializationSettingsAndroid);
-        await flutterLocalNotificationsPlugin
-            .initialize(initializationSettings);
+    service.on('setAsBackground').listen((event) {
+      service.setAsBackgroundService();
+    });
+  }
 
-        // Show initial notification
-        await _showProgressNotification(flutterLocalNotificationsPlugin, 0);
+  service.on('stopService').listen((event) {
+    service.stopSelf();
+  });
 
-        try {
-          final response = await repository.addPost(
-            postText: inputData!['postText'],
-            postVideos: List<String>.from(inputData['postVideos']),
-          );
+  // Your background task logic
+  service.on('uploadPost').listen((inputData) async {
+    final repository = AddPostRepository();
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-          if (response['status'] == 200) {
-            await _showSuccessNotification(
-                flutterLocalNotificationsPlugin, response['message']);
-          } else {
-            await _showErrorNotification(
-                flutterLocalNotificationsPlugin, response['message']);
-          }
-        } catch (e) {
-          await _showErrorNotification(
-              flutterLocalNotificationsPlugin, e.toString());
-        }
-        break;
+    // Initialize notifications
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    final InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+    // Show initial notification
+    await _showProgressNotification(flutterLocalNotificationsPlugin, 0);
+
+    try {
+      final response = await repository.addPost(
+        postText: inputData!['postText'],
+        postVideos:[],
+        onProgress: (progress) async {
+          await _showProgressNotification(
+              flutterLocalNotificationsPlugin, (progress * 100).toInt());
+        },
+      );
+
+      if (response['status'] == 200) {
+        await _showSuccessNotification(
+            flutterLocalNotificationsPlugin, response['message']);
+        print('ran');    
+      } else {
+        await _showErrorNotification(
+            flutterLocalNotificationsPlugin, response['message']);
+        print(response['message']);
+        // print(response['status']);
+      }
+    } catch (e) {
+      await _showErrorNotification(
+          flutterLocalNotificationsPlugin, e.toString());
+      print(e.toString());
     }
-    return Future.value(true);
   });
 }
 

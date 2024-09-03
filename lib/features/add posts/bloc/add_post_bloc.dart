@@ -2,9 +2,12 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flock/features/add%20posts/repository/add_post_repository.dart';
+import 'package:flock/services/background_service.dart';
 import 'package:flock/utils/image_picker.dart';
 import 'package:flock/utils/storage.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:workmanager/workmanager.dart';
 
 part 'add_post_event.dart';
 part 'add_post_state.dart';
@@ -48,35 +51,30 @@ class AddPostBloc extends Bloc<AddPostEvent, AddPostState> {
     emit(AddPostVisibilityChanged(visibilityType: event.visibilityType));
   }
 
-  FutureOr<void> _onAddPost(
-      AddPostFunction event, Emitter<AddPostState> emit) async {
-    emit(AddPostLoading());
-    try {
-      final response = await addPostRepository.addPost(
-        postText: event.postText,
-        postVideos: event.postVideos,
-      );
-
-      if (response['status'] == 200) {
-        emit(AddPostSuccess(message: response['message']));
-        print('200 ${response['message']}');
-      } else if (response['status'] == 400) {
-        emit(AddPostError(error: response['message']));
-        print('400 ${response['message']}');
-      } else if (response['status'] == 500) {
-        emit(AddPostError(error: response['message']));
-        print('500 ${response['message']}');
-      } else {
-        emit(AddPostError(error: response['message']));
-        print('anything else ${response['message']}');
+    FutureOr<void> _onAddPost(AddPostFunction event, Emitter<AddPostState> emit) async {
+  emit(AddPostLoading());
+  try {
+   final service = FlutterBackgroundService();
+    // Send data to the background service
+    service.invoke(
+      'uploadPost', 
+      {
+        'postText': event.postText,
+        'postVideos': event.postVideos,
       }
-    } catch (e) {
-      emit(AddPostError(error: e.toString()));
-      print('catch erro ${e.toString()}');
-    }
-  }
+    );
 
-  FutureOr<void> _resetAddPostState(ResetAddPostState event, Emitter<AddPostState> emit) {
+    print("Background task registered successfully");
+    emit(AddPostSuccess(message: "Upload started in background"));
+  } catch (e) {
+    print("Error in _onAddPost: ${e.toString()}");
+    emit(AddPostError(error: e.toString()));
+  }
+}
+
+
+  FutureOr<void> _resetAddPostState(
+      ResetAddPostState event, Emitter<AddPostState> emit) {
     emit(AddPostInitial());
   }
 }

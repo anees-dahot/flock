@@ -7,6 +7,7 @@ import 'package:flock/features/search/screens/search_screen.dart';
 import 'package:flock/models/user.dart';
 import 'package:flutter/material.dart';
 
+import '../features/add posts/screens/add_post.dart';
 import '../features/create account/screens/pick_profile_cover.dart';
 import '../features/register account/screens/register_account_screen.dart';
 import '../features/navigation bar/screens/navigation_bar.dart';
@@ -21,13 +22,16 @@ Route generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(builder: (_) => const RegisterScreen());
     case ProfileScreen.routeName:
       final user = routeSettings.arguments as UserModel;
-      return MaterialPageRoute(builder: (_) => ProfileScreen(user: user,));
+      return MaterialPageRoute(
+          builder: (_) => ProfileScreen(
+                user: user,
+              ));
     case PickProfileImage.routeName:
       return MaterialPageRoute(builder: (_) => const PickProfileImage());
-    case NavigationBarScreen.routeName:
-      return MaterialPageRoute(builder: (_) => const NavigationBarScreen());
     case SuggestedFriends.routeName:
       return MaterialPageRoute(builder: (_) => const SuggestedFriends());
+    case AddPost.routeName:
+      return MaterialPageRoute(builder: (_) => const AddPost());
     case SearchScreen.routeName:
       final bool autoFocus = routeSettings.arguments as bool;
       return MaterialPageRoute(

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AddPost extends StatefulWidget {
+  static const String routeName = 'add-post';
   const AddPost({super.key});
 
   @override
@@ -26,7 +27,6 @@ class _AddPostState extends State<AddPost> {
   @override
   void initState() {
     getUser();
-    initialization();
     _addPostBloc = AddPostBloc(addPostRepository: AddPostRepository());
     super.initState();
   }
@@ -43,17 +43,7 @@ class _AddPostState extends State<AddPost> {
     setState(() {});
   }
 
-  void initialization() async {
-    final List<String>? images =
-        await Storage().deleteList('images') as List<String>?;
-    if (images != null) {
-      // Check if images is not null
-      print(images.length);
-    } else {
-      print('No images found'); // Handle the null case
-    }
-    await Storage().saveDate('visibilityType', 'Public');
-  }
+
 
   @override
   Widget build(BuildContext context) {

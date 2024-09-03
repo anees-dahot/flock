@@ -2,7 +2,9 @@ import 'package:flock/core/theme/theme_cubit.dart';
 import 'package:flock/features/add%20posts/screens/add_post.dart';
 import 'package:flock/features/splash%20screen/screens/splash_screen.dart';
 import 'package:flock/routes/router.dart';
+import 'package:flock/services/background_service.dart'; // Make sure this path is correct
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -10,7 +12,8 @@ import 'core/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //  await Workmanager().initialize(callbackDispatcher);
+  // Initialize the service
+await initializeService();
 
   final themeCubit = ThemeCubit();
   await themeCubit.loadTheme();
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
             themeMode: ThemeMode.dark,
             onGenerateRoute: generateRoute,
             // initialRoute: NavigationBarScreen.routeName,
-            home: AddPost(),
+            home: SplashScreen(),
           );
         },
       ),

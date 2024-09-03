@@ -1,4 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+ <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <!--
+    Permission to use here depends on the value you picked for foregroundServiceType - see the Android documentation.
+    Eg, if you picked 'location', use 'android.permission.FOREGROUND_SERVICE_LOCATION'
+  -->
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_..." />
     <application
         android:label="flock"
         android:name="${applicationName}"
@@ -15,6 +21,11 @@
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
+
+           <!-- <service
+            android:name="id.flutter.flutter_background_service.BackgroundService"
+            android:foregroundServiceType="WhatForegroundServiceTypeDoYouWant"
+        />       -->
             <meta-data
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"

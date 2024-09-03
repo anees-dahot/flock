@@ -1,3 +1,4 @@
+import 'package:flock/features/add%20posts/screens/add_post.dart';
 import 'package:flock/features/login/screens/login_screen.dart';
 import 'package:flock/utils/flush_message.dart';
 import 'package:flock/utils/storage.dart';
@@ -27,9 +28,7 @@ class HomePage extends StatelessWidget {
                       context, error.toString());
                 });
               }),
-          IconButton(
-              icon: const Icon(CupertinoIcons.bell),
-              onPressed: () {}), // Removed extra semicolon
+          IconButton(icon: const Icon(CupertinoIcons.bell), onPressed: () {}),
         ],
         backgroundColor: Theme.of(context).colorScheme.background,
       ),
@@ -40,28 +39,32 @@ class HomePage extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(CupertinoIcons.pencil,
-                            color: Theme.of(context).colorScheme.primary),
-                        const SizedBox(width: 12),
-                        Text(
-                          "What's on your mind?",
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                        ),
-                      ],
+                  child: GestureDetector(
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(AddPost.routeName),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(CupertinoIcons.pencil,
+                              color: Theme.of(context).colorScheme.primary),
+                          const SizedBox(width: 12),
+                          Text(
+                            "What's on your mind?",
+                            style:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                    ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -74,7 +77,9 @@ class HomePage extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AddPost.routeName);
+                    },
                     icon: Icon(
                       CupertinoIcons.photo,
                       color: Theme.of(context).colorScheme.primary,
