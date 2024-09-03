@@ -57,8 +57,8 @@ void onStart(ServiceInstance service) async {
         postText: inputData!['postText'],
         postVideos:[],
         onProgress: (progress) async {
-          await _showProgressNotification(
-              flutterLocalNotificationsPlugin, (progress * 100).toInt());
+         await _showProgressNotification(
+            flutterLocalNotificationsPlugin, (progress * 100).toInt());
         },
       );
 
@@ -83,7 +83,7 @@ void onStart(ServiceInstance service) async {
 Future<void> _showProgressNotification(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
     int progress) async {
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
     'upload_channel',
     'Upload Notifications',
@@ -93,9 +93,9 @@ Future<void> _showProgressNotification(
     onlyAlertOnce: true,
     showProgress: true,
     maxProgress: 100,
-    progress: 0,
+    progress: progress,
   );
-  const NotificationDetails platformChannelSpecifics =
+  NotificationDetails platformChannelSpecifics =
       NotificationDetails(android: androidPlatformChannelSpecifics);
   await flutterLocalNotificationsPlugin.show(
     0,
@@ -104,6 +104,7 @@ Future<void> _showProgressNotification(
     platformChannelSpecifics,
   );
 }
+
 
 Future<void> _showSuccessNotification(
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
