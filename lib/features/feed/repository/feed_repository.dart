@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flock/models/post.dart';
 import 'package:flock/utils/app_urls.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:http/http.dart' as http;
@@ -18,11 +19,10 @@ class FeedRepository {
     final responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 200) {
-      return {
-        'status': 200,
-        'message': responseBody['message'],
-        'data': responseBody['posts']
-      };
+      final List<dynamic> data = responseBody['posts'];
+      final List<Post> posts =
+          data.map((userJson) => Post.fromJson(userJson)).toList();
+      return {'status': 200, 'message': responseBody['message'], 'data': posts};
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': responseBody['msg']};
     } else {
