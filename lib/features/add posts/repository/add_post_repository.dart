@@ -12,40 +12,43 @@ class AddPostRepository {
     required Function(double)? onProgress,
   }) async {
     final String type = await Storage().getData('visibilityType') as String;
-   final List<String>? images = await Storage().getList('images');
+    final List<String>? images = await Storage().getList('images');
 
-  print('repo ran ' + (images?.length ?? 0).toString());
-  
-  List<String> imageUrl = [];
-  int totalSteps = (images?.length ?? 0) + 1; // Number of images + 1 for the post text
-  int currentStep = 0;
+    print('repo ran ' + (images?.length ?? 0).toString());
 
-  // Simulate initial progress for text post
-  if (images == null || images.isEmpty) {
-    await simulateGradualProgress(onProgress, 0, 0.5, 3000); // Simulate 50% progress over 3 seconds
-    currentStep++;
-  }
+    List<String> imageUrl = [];
+    int totalSteps =
+        (images?.length ?? 0) + 1; // Number of images + 1 for the post text
+    int currentStep = 0;
 
-  if (images != null && images.isNotEmpty) {
-    final cloudinary = CloudinaryPublic('doaewaso1', 'one9vigp');
-    for (int i = 0; i < images.length; i++) {
-      try {
-        final CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i], folder: _generateRandomString())
-        );
-        imageUrl.add(res.secureUrl);
-        currentStep++;
-    if (onProgress != null) {
-      onProgress(currentStep / totalSteps);
+    // Simulate initial progress for text post
+    if (images == null || images.isEmpty) {
+      await simulateGradualProgress(
+          onProgress, 0, 0.5, 3000); // Simulate 50% progress over 3 seconds
+      currentStep++;
     }
-      } catch (e) {
-        print('Error uploading image: $e');
-        // Optionally handle the error, e.g., skip this image or return an error
+
+    if (images != null && images.isNotEmpty) {
+      final cloudinary = CloudinaryPublic('doaewaso1', 'one9vigp');
+      for (int i = 0; i < images.length; i++) {
+        try {
+          final CloudinaryResponse res = await cloudinary.uploadFile(
+              CloudinaryFile.fromFile(images[i],
+                  folder: _generateRandomString()));
+          imageUrl.add(res.secureUrl);
+          currentStep++;
+          if (onProgress != null) {
+            onProgress(currentStep / totalSteps);
+          }
+        } catch (e) {
+          print('Error uploading image: $e');
+          // Optionally handle the error, e.g., skip this image or return an error
+        }
       }
     }
-  }
 
-   await simulateGradualProgress(onProgress, currentStep / totalSteps, 1, 3000); // Simulate final 50% progress over 3 seconds
+    await simulateGradualProgress(onProgress, currentStep / totalSteps, 1,
+        3000); // Simulate final 50% progress over 3 seconds
     String? token = await Storage().getData('token') as String;
     final response = await http.post(Uri.parse('$baseUrl/api/posts/add-post'),
         headers: {
@@ -74,19 +77,22 @@ class AddPostRepository {
       return {'status': response.statusCode, 'message': responseBody['error']};
     }
   }
-Future<void> simulateGradualProgress(Function(double)? onProgress, double start, double end, int duration) async {
-  int steps = 20; // Number of steps to break the duration into
-  double stepProgress = (end - start) / steps;
-  int stepDuration = (duration ~/ steps); // Duration for each step in milliseconds
 
-  for (int i = 0; i < steps; i++) {
-    await Future.delayed(Duration(milliseconds: stepDuration), () {
-      if (onProgress != null) {
-        onProgress(start + (stepProgress * i));
-      }
-    });
+  Future<void> simulateGradualProgress(Function(double)? onProgress,
+      double start, double end, int duration) async {
+    int steps = 20; // Number of steps to break the duration into
+    double stepProgress = (end - start) / steps;
+    int stepDuration =
+        (duration ~/ steps); // Duration for each step in milliseconds
+
+    for (int i = 0; i < steps; i++) {
+      await Future.delayed(Duration(milliseconds: stepDuration), () {
+        if (onProgress != null) {
+          onProgress(start + (stepProgress * i));
+        }
+      });
+    }
   }
-}
 
   String _generateRandomString([int length = 10]) {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
