@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'dart:convert';
 
+import 'package:flock/models/user.dart';
+
 class Post extends Equatable {
   final String? id;
-  final String? userPosted;
+  final UserModel? userPosted;
   final String? postText;
   final List<PostReact>? postReacts;
   final List<String>? postImages;
@@ -35,7 +37,9 @@ class Post extends Equatable {
   factory Post.fromMap(Map<String, dynamic> map) {
     return Post(
       id: map['_id'],
-      userPosted: map['userPosted'],
+      userPosted: map['userPosted'] != null
+          ? UserModel.fromMap(map['userPosted'])
+          : null,
       postText: map['postText'],
       postReacts: map['postReacts'] != null
           ? List<PostReact>.from(

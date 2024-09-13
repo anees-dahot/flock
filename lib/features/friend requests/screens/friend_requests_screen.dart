@@ -95,7 +95,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                                     CircleAvatar(
                                       radius: 20,
                                       backgroundImage:
-                                          NetworkImage(requests.profileImage),
+                                          NetworkImage(requests.profileImage!),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
@@ -104,7 +104,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            requests.fullName,
+                                            requests.fullName!,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .bodyLarge
@@ -126,7 +126,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                                     onPressed: () {
                                       _friendRequestsBloc.add(
                                           AcceptFriendRequestsEvent(
-                                              userId: requests.id));
+                                              userId: requests.id!));
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor:
@@ -150,7 +150,7 @@ class _FriendRequestsState extends State<FriendRequests> {
                                     onPressed: () {
                                       _friendRequestsBloc.add(
                                           DeleteFriendRequestsEvent(
-                                              userId: requests.id));
+                                              userId: requests.id!));
                                     },
                                     style: OutlinedButton.styleFrom(
                                       shape: RoundedRectangleBorder(

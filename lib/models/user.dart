@@ -2,37 +2,64 @@
 import 'package:equatable/equatable.dart';
 
 class UserModel extends Equatable {
-  final String id;
-  final String fullName;
-  final String userName;
-  final String bio;
-  final String profileImage;
-  final String profileCover;
-  final String email;
-  final String password;
-  final DateTime dateOfBirth;
-  final int phoneNumber;
-  final List<String> friends;
-  final List<String> friendsRequests;
-  final List<String> likedPage;
-  final List<String> followedGroups;
+  final String? id;
+  final String? fullName;
+  final String? userName;
+  final String? bio;
+  final String? profileImage;
+  final String? profileCover;
+  final String? email;
+  final String? password;
+  final int? phoneNumber;
+  final List<String>? friends;
+  final List<String>? friendsRequests;
+  final List<String>? likedPage;
+  final List<String>? followedGroups;
+  final DateTime? dateOfBirth;
 
   const UserModel({
-    required this.id,
-    required this.fullName,
-    required this.userName,
-    required this.bio,
-    required this.profileImage,
-    required this.profileCover,
-    required this.email,
-    required this.password,
-    required this.dateOfBirth,
-    required this.phoneNumber,
-    required this.friends,
-    required this.friendsRequests,
-    required this.likedPage,
-    required this.followedGroups,
+    this.id,
+    this.fullName,
+    this.userName,
+    this.bio,
+    this.profileImage,
+    this.profileCover,
+    this.email,
+    this.password,
+    this.phoneNumber,
+    this.friends,
+    this.friendsRequests,
+    this.likedPage,
+    this.followedGroups,
+    this.dateOfBirth,
   });
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['_id'],
+      fullName: map['fullName'],
+      userName: map['userName'],
+      bio: map['Bio'],
+      profileImage: map['profileImage'],
+      profileCover: map['profileCover'],
+      email: map['email'],
+      password: map['password'],
+      phoneNumber: map['phoneNumber'],
+      friends:
+          map['friends'] != null ? List<String>.from(map['friends']) : null,
+      friendsRequests: map['friendsRequests'] != null
+          ? List<String>.from(map['friendsRequests'])
+          : null,
+      likedPage:
+          map['likedPage'] != null ? List<String>.from(map['likedPage']) : null,
+      followedGroups: map['followedGroups'] != null
+          ? List<String>.from(map['followedGroups'])
+          : null,
+      dateOfBirth: map['DateOfBirth'] != null
+          ? DateTime.parse(map['DateOfBirth'])
+          : null,
+    );
+  }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
@@ -63,7 +90,7 @@ class UserModel extends Equatable {
       'profileCover': profileCover,
       'email': email,
       'password': password,
-      'DateOfBirth': dateOfBirth.toIso8601String(),
+      'DateOfBirth': dateOfBirth!.toIso8601String(),
       'phoneNumber': phoneNumber,
       'friends': friends,
       'friendsRequests': friendsRequests,

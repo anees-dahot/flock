@@ -56,12 +56,12 @@ class SuggestedFriendsList extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: CachedNetworkImage(
-                                imageUrl: data.profileImage,
+                                imageUrl: data.profileImage!,
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
-                          title: Text(data.fullName),
+                          title: Text(data.fullName!),
                           trailing: BlocBuilder<SuggestedFriendsBloc,
                               SuggestedFriendsState>(
                             bloc: _suggestedFriendsBloc,
@@ -95,11 +95,11 @@ class SuggestedFriendsList extends StatelessWidget {
                                   if (!isRequestSent) {
                                     _suggestedFriendsBloc.add(
                                         SendFriendRequestEvent(
-                                            userId: data.id));
+                                            userId: data.id!));
                                   } else {
                                     _suggestedFriendsBloc.add(
                                         DeleteFriendRequestEvent(
-                                            userId: data.id));
+                                            userId: data.id!));
                                   }
                                 },
                                 child: Container(
@@ -109,7 +109,7 @@ class SuggestedFriendsList extends StatelessWidget {
                                       0.055,
                                   decoration: BoxDecoration(
                                     color: isRequestSent ||
-                                            data.friendsRequests.contains(id)
+                                            data.friendsRequests!.contains(id!)
                                         ? Theme.of(context)
                                             .colorScheme
                                             .onBackground
@@ -119,15 +119,16 @@ class SuggestedFriendsList extends StatelessWidget {
                                   child: Center(
                                     child: Text(
                                       isRequestSent ||
-                                              data.friendsRequests.contains(id)
+                                              data.friendsRequests!
+                                                  .contains(id!)
                                           ? 'Requested'
                                           : 'Add Friend',
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w500,
                                         color: isRequestSent ||
-                                                data.friendsRequests
-                                                    .contains(id)
+                                                data.friendsRequests!
+                                                    .contains(id!)
                                             ? Theme.of(context)
                                                 .colorScheme
                                                 .background

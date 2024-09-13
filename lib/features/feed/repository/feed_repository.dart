@@ -21,7 +21,8 @@ class FeedRepository {
     if (response.statusCode == 200) {
       final List<dynamic> data = responseBody['posts'];
       final List<Post> posts =
-          data.map((userJson) => Post.fromJson(userJson)).toList();
+          data.map((posts) => Post.fromMap(posts)).toList();
+
       return {'status': 200, 'message': responseBody['message'], 'data': posts};
     } else if (response.statusCode == 400) {
       return {'status': 400, 'message': responseBody['msg']};

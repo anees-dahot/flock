@@ -24,15 +24,16 @@ postsRouter.post("/api/posts/add-post", auth, async (req, res) => {
   }
 });
 
-postsRouter.post("/api/posts/get-posts", auth, async (req, res) => {
+postsRouter.get("/api/posts/get-posts", auth, async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).populate('userPosted');
     res
       .status(200)
-      .json({ message: "Post published successfully", post: posts });
+      .json({ message: "Post published successfully", posts: posts });
     console.log(posts);
   } catch (e) {
     res.status(500).json({ error: e.message });
+    console.log(e.message)
   }
 });
 

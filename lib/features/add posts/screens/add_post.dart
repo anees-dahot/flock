@@ -120,7 +120,7 @@ class _AddPostState extends State<AddPost> {
                   children: [
                     CircleAvatar(
                       backgroundImage: user?.profileImage != null
-                          ? CachedNetworkImageProvider(user!.profileImage)
+                          ? CachedNetworkImageProvider(user!.profileImage!)
                           : null,
                       radius: 24,
                     ),

@@ -23,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     _profileBloc = ProfileBloc(profileRepository: ProfileRepository());
-    _profileBloc.add(GetFriendRequestsEvent(userId: widget.user!.id));
+    _profileBloc.add(GetFriendRequestsEvent(userId: widget.user!.id!));
     getId();
     super.initState();
   }
@@ -58,7 +58,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     width: size.width,
                     height: size.height * 0.3,
                     child: CachedNetworkImage(
-                      imageUrl: widget.user!.profileCover,
+                      imageUrl: widget.user!.profileCover!,
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
                           const Center(child: CircularProgressIndicator()),
@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(75),
                         child: CachedNetworkImage(
-                          imageUrl: widget.user!.profileImage,
+                          imageUrl: widget.user!.profileImage!,
                           width: 120,
                           height: 120,
                           fit: BoxFit.cover,
@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Row(
                       children: [
                         Text(
-                          widget.user!.fullName,
+                          widget.user!.fullName!,
                           style: Theme.of(context).textTheme.headlineLarge,
                         ),
                         SizedBox(
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     Text(
-                      widget.user!.bio,
+                      widget.user!.bio!,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     SizedBox(
@@ -155,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 widget.user!.id == id
                                     ? const Icon(CupertinoIcons.pencil)
-                                    : widget.user!.friends.contains(id)
+                                    : widget.user!.friends!.contains(id!)
                                         ? const Icon(
                                             Icons.group,
                                           )
@@ -166,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                     widget.user!.id == id
                                         ? 'Add to story'
-                                        : widget.user!.friends.contains(id)
+                                        : widget.user!.friends!.contains(id!)
                                             ? 'Friends'
                                             : 'Send request',
                                     style:
@@ -303,7 +303,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   borderRadius:
                                                       BorderRadius.circular(8),
                                                   child: CachedNetworkImage(
-                                                    imageUrl: data.profileImage,
+                                                    imageUrl:
+                                                        data.profileImage!,
                                                     fit: BoxFit.cover,
                                                     placeholder: (context,
                                                             url) =>
@@ -325,7 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               const SizedBox(height: 8),
                                               Flexible(
                                                 child: Text(
-                                                  data.fullName,
+                                                  data.fullName!,
                                                   textAlign: TextAlign.center,
                                                   style: const TextStyle(
                                                     fontWeight: FontWeight.bold,
@@ -444,69 +445,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     // SizedBox(height: size.height * 0.02),
                     ListView.builder(
-  shrinkWrap: true,
-  physics: ClampingScrollPhysics(),
-  itemCount: 10,
-  itemBuilder: (context, index) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8),
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(widget.user!.profileImage),
-              radius: 20,
-            ),
-            title: Text(
-              widget.user!.fullName,
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-            trailing: IconButton(
-              icon: Icon(CupertinoIcons.ellipsis),
-              onPressed: () {},
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Text(
-              'Its Post content. ' * 10,
-              style: TextStyle(fontSize: 16),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(CupertinoIcons.heart, color: Colors.red),
-                    SizedBox(width: 4),
-                    Text('1.2k', style: TextStyle(fontWeight: FontWeight.bold)),
-                    SizedBox(width: 16),
-                    Icon(CupertinoIcons.chat_bubble, color: Colors.blue),
-                    SizedBox(width: 4),
-                    Text('84', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Icon(CupertinoIcons.share, color: Theme.of(context).colorScheme.primary),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  },
-)
+                      shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
+                      itemCount: 10,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 8),
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      widget.user!.profileImage!),
+                                  radius: 20,
+                                ),
+                                title: Text(
+                                  widget.user!.fullName!,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: Text(
+                                  '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+                                  style: TextStyle(color: Colors.grey[600]),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(CupertinoIcons.ellipsis),
+                                  onPressed: () {},
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 8),
+                                child: Text(
+                                  'Its Post content. ' * 10,
+                                  style: TextStyle(fontSize: 16),
+                                  maxLines: 3,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(CupertinoIcons.heart,
+                                            color: Colors.red),
+                                        SizedBox(width: 4),
+                                        Text('1.2k',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(width: 16),
+                                        Icon(CupertinoIcons.chat_bubble,
+                                            color: Colors.blue),
+                                        SizedBox(width: 4),
+                                        Text('84',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold)),
+                                      ],
+                                    ),
+                                    Icon(CupertinoIcons.share,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    )
                   ],
                 ),
               ),
