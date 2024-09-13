@@ -3,6 +3,7 @@ import 'package:flock/features/feed/bloc/feed_bloc.dart';
 import 'package:flock/features/feed/repository/feed_repository.dart';
 import 'package:flock/features/feed/widgets/post_images_widget.dart';
 import 'package:flock/features/login/screens/login_screen.dart';
+import 'package:flock/features/profile/screens/profile_screen.dart';
 import 'package:flock/utils/flush_message.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -124,7 +125,6 @@ class _HomePageState extends State<HomePage> {
                       itemCount: posts.length,
                       itemBuilder: (context, index) {
                         final data = posts[index];
-                        print(data);
                         return Card(
                           margin: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 16.0),
@@ -135,14 +135,17 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ListTile(
-                                leading: CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      data.userPosted!.profileImage ?? ''),
+                                leading: GestureDetector(
+                                  onTap: () => Navigator.of(context).pushNamed(ProfileScreen.routeName, arguments: data.userPosted),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        data.userPosted!.profileImage ?? ''),
+                                  ),
                                 ),
                                 title: Text(data.userPosted!.fullName!,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold)),
-                                subtitle: const Text('2 hours ago'),
+                                subtitle: Text(data.postedAt!.toString()),
                                 trailing: IconButton(
                                   icon: const Icon(CupertinoIcons.ellipsis),
                                   onPressed: () {
@@ -150,10 +153,12 @@ class _HomePageState extends State<HomePage> {
                                   },
                                 ),
                               ),
-                             ClipRRect(
-  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(15)),
-  child: ImageGridWidget(images: data.postImages ?? []),
-),
+                              ClipRRect(
+                                borderRadius: const BorderRadius.vertical(
+                                    bottom: Radius.circular(15)),
+                                child: ImageGridWidget(
+                                    images: data.postImages ?? []),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(

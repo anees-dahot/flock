@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flock/features/profile/bloc/profile_bloc.dart';
 import 'package:flock/features/profile/repository/profile_repository.dart';
+import 'package:flock/features/profile/widgets/profile_shimmer_widget.dart';
 import 'package:flock/models/user.dart';
 import 'package:flock/utils/storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,22 +23,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    _profileBloc = ProfileBloc(profileRepository: ProfileRepository());
-    _profileBloc.add(GetFriendRequestsEvent(userId: widget.user!.id!));
-    getId();
-    super.initState();
+    super.initState(); // Move this to the top
+    if (widget.user != null) { // Check if user is not null
+      _profileBloc = ProfileBloc(profileRepository: ProfileRepository());
+      _profileBloc.add(GetFriendRequestsEvent(userId: widget.user!.id!));
+      getId();
+    }
   }
 
   void getId() async {
     await Storage().getUserData().then((value) {
+        if (widget.user != null) { // Check if user is not null
       setState(() {
         id = value!.id;
-      });
+      });}
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    if (widget.user == null) { // Handle null user case
+      return Center(child: CircularProgressIndicator());
+    }
     final size = MediaQuery.of(context).size;
     return BlocProvider(
       create: (context) => _profileBloc,
@@ -47,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Colors.transparent,
         ),
         body: SingleChildScrollView(
-          child: Column(
+          child:  Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Stack(
@@ -155,7 +162,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 widget.user!.id == id
                                     ? const Icon(CupertinoIcons.pencil)
-                                    : widget.user!.friends!.contains(id!)
+                                    : widget.user!.friends!.contains(id)
                                         ? const Icon(
                                             Icons.group,
                                           )
@@ -166,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Text(
                                     widget.user!.id == id
                                         ? 'Add to story'
-                                        : widget.user!.friends!.contains(id!)
+                                        : widget.user!.friends!.contains(id)
                                             ? 'Friends'
                                             : 'Send request',
                                     style:
@@ -231,19 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       bloc: _profileBloc,
                       builder: (context, state) {
                         if (state is GetFriendRequestsLoadingState) {
-                          return Container(
-                            width: size.width * 0.9,
-                            height: size.height * 0.3,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primaryContainer,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
+                         return const Center(child: CircularProgressIndicator(),);
                         } else if (state is GetFriendRequestsFailureState) {
                           return Container(
                             width: size.width * 0.9,
