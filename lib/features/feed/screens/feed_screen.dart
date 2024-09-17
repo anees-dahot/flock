@@ -1,4 +1,5 @@
-import 'package:flock/features/add%20posts/screens/add_post.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flock/core/widgets/add_post_container.dart';
 import 'package:flock/features/feed/bloc/feed_bloc.dart';
 import 'package:flock/features/feed/repository/feed_repository.dart';
 import 'package:flock/features/feed/widgets/post_images_widget.dart';
@@ -54,157 +55,89 @@ class _HomePageState extends State<HomePage> {
         ),
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () =>
-                          Navigator.of(context).pushNamed(AddPost.routeName),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(CupertinoIcons.pencil,
-                                color: Theme.of(context).colorScheme.primary),
-                            const SizedBox(width: 12),
-                            Text(
-                              "What's on your mind?",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurfaceVariant,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pushNamed(AddPost.routeName);
-                      },
-                      icon: Icon(
-                        CupertinoIcons.photo,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const AddPostContainer(),
             BlocBuilder<FeedBloc, FeedState>(
               bloc: _feedBloc,
               builder: (context, state) {
                 if (state is GetPostsLoadingState) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (state is GetPostsErrorgState) {
                   return Center(child: Text(state.error));
                 } else if (state is GetPostsSuccessState) {
                   final posts = state.posts;
                   return Expanded(
-                    child: ListView.builder(
-                      itemCount: posts.length,
-                      itemBuilder: (context, index) {
-                        final data = posts[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          elevation: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ListTile(
-                                leading: GestureDetector(
-                                  onTap: () => Navigator.of(context).pushNamed(ProfileScreen.routeName, arguments: data.userPosted),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        data.userPosted!.profileImage ?? ''),
+                      child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      final data = posts[index];
+                      return Card(
+                        margin: EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                    data.userPosted!.profileImage!),
+                                radius: 20,
+                              ),
+                              title: Text(
+                                data.userPosted!.fullName!,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                '${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}',
+                                style: TextStyle(color: Colors.grey[600]),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Text(
+                                'This is the post content ' * 8,
+                                style: TextStyle(fontSize: 16),
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(CupertinoIcons.heart,
+                                        color: Colors.red),
+                                    onPressed: () {},
                                   ),
-                                ),
-                                title: Text(data.userPosted!.fullName!,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
-                                subtitle: Text(data.postedAt!.toString()),
-                                trailing: IconButton(
-                                  icon: const Icon(CupertinoIcons.ellipsis),
-                                  onPressed: () {
-                                    // Add your onPressed logic here
-                                  },
-                                ),
+                                  SizedBox(width: 4),
+                                  Text('1.2k',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                  SizedBox(width: 16),
+                                  IconButton(
+                                    icon: Icon(CupertinoIcons.chat_bubble,
+                                        color: Colors.blue),
+                                    onPressed: () {},
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text('84',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold)),
+                                ],
                               ),
-                              ClipRRect(
-                                borderRadius: const BorderRadius.vertical(
-                                    bottom: Radius.circular(15)),
-                                child: ImageGridWidget(
-                                    images: data.postImages ?? []),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Icon(CupertinoIcons.heart,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
-                                        const SizedBox(width: 4),
-                                        Text('1.2k',
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground)),
-                                        const SizedBox(width: 16),
-                                        Icon(CupertinoIcons.chat_bubble,
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .onBackground),
-                                        const SizedBox(width: 4),
-                                        Text('84',
-                                            style: TextStyle(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .onBackground)),
-                                      ],
-                                    ),
-                                    Icon(CupertinoIcons.share,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ));
                 } else {
-                  return SizedBox();
+                  return const SizedBox();
                 }
               },
             )
